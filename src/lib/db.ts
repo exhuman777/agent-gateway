@@ -1,13 +1,5 @@
 import { APIListing } from './types';
 
-// Check if we're running on Vercel (serverless) - check multiple indicators
-const isServerless =
-  process.env.VERCEL === '1' ||
-  process.env.VERCEL === 'true' ||
-  !!process.env.VERCEL_URL ||
-  !!process.env.AWS_LAMBDA_FUNCTION_NAME ||
-  process.cwd().startsWith('/var/task');
-
 interface Database {
   apis: APIListing[];
   lastUpdated: string;
@@ -16,51 +8,74 @@ interface Database {
 // In-memory storage for serverless
 let inMemoryDb: Database = { apis: [], lastUpdated: new Date().toISOString() };
 
-// File-based storage for local development
+// Check at runtime if we're on serverless
+function isServerless(): boolean {
+  return (
+    process.env.VERCEL === '1' ||
+    process.env.VERCEL === 'true' ||
+    !!process.env.VERCEL_URL ||
+    !!process.env.AWS_LAMBDA_FUNCTION_NAME ||
+    process.cwd().startsWith('/var/task') ||
+    process.cwd().startsWith('/vercel')
+  );
+}
+
 function getFilePath(): string {
   const { join } = require('path');
   return join(process.cwd(), 'data', 'registry.json');
 }
 
 function ensureDbExists(): void {
-  if (isServerless) return;
+  if (isServerless()) return;
 
-  const { existsSync, mkdirSync, writeFileSync } = require('fs');
-  const { join } = require('path');
+  try {
+    const { existsSync, mkdirSync, writeFileSync } = require('fs');
+    const { join } = require('path');
 
-  const dataDir = join(process.cwd(), 'data');
-  if (!existsSync(dataDir)) {
-    mkdirSync(dataDir, { recursive: true });
-  }
+    const dataDir = join(process.cwd(), 'data');
+    if (!existsSync(dataDir)) {
+      mkdirSync(dataDir, { recursive: true });
+    }
 
-  const dbPath = getFilePath();
-  if (!existsSync(dbPath)) {
-    writeFileSync(dbPath, JSON.stringify({ apis: [], lastUpdated: new Date().toISOString() }, null, 2));
+    const dbPath = getFilePath();
+    if (!existsSync(dbPath)) {
+      writeFileSync(dbPath, JSON.stringify({ apis: [], lastUpdated: new Date().toISOString() }, null, 2));
+    }
+  } catch {
+    // Silently fail on serverless - will use in-memory
   }
 }
 
 export function readDb(): Database {
-  if (isServerless) {
+  if (isServerless()) {
     return inMemoryDb;
   }
 
-  ensureDbExists();
-  const { readFileSync } = require('fs');
-  const data = readFileSync(getFilePath(), 'utf-8');
-  return JSON.parse(data);
+  try {
+    ensureDbExists();
+    const { readFileSync } = require('fs');
+    const data = readFileSync(getFilePath(), 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return inMemoryDb;
+  }
 }
 
 export function writeDb(db: Database): void {
   db.lastUpdated = new Date().toISOString();
 
-  if (isServerless) {
+  if (isServerless()) {
     inMemoryDb = db;
     return;
   }
 
-  ensureDbExists();
-  const { writeFileSync } = require('fs');
-  writeFileSync(getFilePath(), JSON.stringify(db, null, 2));
+  try {
+    ensureDbExists();
+    const { writeFileSync } = require('fs');
+    writeFileSync(getFilePath(), JSON.stringify(db, null, 2));
+  } catch {
+    inMemoryDb = db;
+  }
 }
 
 export function getAllAPIs(): APIListing[] {
