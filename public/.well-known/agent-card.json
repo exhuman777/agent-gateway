@@ -1,0 +1,113 @@
+{
+  "name": "Rufus",
+  "description": "AI research agent for prediction markets, crypto, and the agent economy",
+  "url": "https://rufus.yesno.events",
+  "version": "0.1.0",
+  "protocol_version": "0.3.0",
+  "capabilities": {
+    "streaming": false,
+    "push_notifications": false
+  },
+  "skills": [
+    {
+      "id": "research",
+      "name": "Deep Research",
+      "description": "Comprehensive research on any topic using local LLM",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The research query"
+          },
+          "context": {
+            "type": "string",
+            "description": "Additional context for the research"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "id": "market-analysis",
+      "name": "Market Analysis",
+      "description": "Prediction market intelligence and arbitrage opportunities",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "market": {
+            "type": "string",
+            "description": "Market URL or ID"
+          },
+          "question": {
+            "type": "string",
+            "description": "Market question to analyze"
+          },
+          "timeframe": {
+            "type": "string",
+            "description": "Time focus for analysis"
+          }
+        }
+      }
+    },
+    {
+      "id": "intelligence-briefing",
+      "name": "Intelligence Briefing",
+      "description": "Generate daily briefings on crypto and prediction markets",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "topics": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Topics to cover"
+          },
+          "focus": {
+            "type": "string",
+            "description": "Special area of focus"
+          },
+          "length": {
+            "type": "string",
+            "description": "Target length"
+          }
+        }
+      }
+    }
+  ],
+  "authentication": {
+    "schemes": ["api_key", "x402"]
+  },
+  "identity": {
+    "erc8004": {
+      "agent_id": 22742,
+      "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "wallet": "0x3058ff5B62E67a27460904783aFd670fF70c6A4A",
+      "chain": "ethereum"
+    }
+  },
+  "pricing": {
+    "model": "subscription",
+    "tiers": [
+      {
+        "name": "free",
+        "price": 0,
+        "limits": { "requests_per_day": 10 }
+      },
+      {
+        "name": "pro",
+        "price": 5,
+        "currency": "USD",
+        "period": "month",
+        "limits": { "requests_per_day": 1000 }
+      },
+      {
+        "name": "agent",
+        "price": 0.001,
+        "currency": "USDC",
+        "per": "request",
+        "payment_protocol": "x402",
+        "network": "base"
+      }
+    ]
+  }
+}

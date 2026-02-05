@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# apipool
 
-## Getting Started
+**The API Router for the Agent Economy**
 
-First, run the development server:
+An agent-first API marketplace where AI agents discover and route to the best API providers based on quality, price, and latency.
+
+## Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy to Vercel
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Install Vercel CLI
+npm i -g vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Deploy
+vercel
 
-## Learn More
+# Production deploy
+vercel --prod
+```
 
-To learn more about Next.js, take a look at the following resources:
+Or connect your GitHub repo at [vercel.com](https://vercel.com).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## GitBook Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The `docs/` folder is GitBook-ready:
 
-## Deploy on Vercel
+1. Go to [gitbook.com](https://gitbook.com)
+2. Create new space
+3. Connect to GitHub or upload `docs/` folder
+4. GitBook auto-generates from `SUMMARY.md`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/route` | POST | Smart routing to best provider |
+| `/api/v1/registry` | GET | List all APIs |
+| `/api/v1/registry` | POST | Register new API |
+| `/api/v1/registry/:id` | GET | Get single API |
+| `/api/v1/capabilities` | GET | List capabilities |
+
+## Example: Route to Provider
+
+```bash
+curl -X POST http://localhost:3000/api/v1/route \
+  -H "Content-Type: application/json" \
+  -d '{"capability": "research"}'
+```
+
+## Stack
+
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS + shadcn/ui
+- JSON file persistence (MVP)
+
+## Project Structure
+
+```
+src/
+  app/
+    api/v1/       # Agent-friendly API
+    docs/         # Documentation page
+    explore/      # Browse APIs
+    register/     # Register API form
+  lib/
+    db.ts         # Persistence layer
+    registry.ts   # Registry logic
+    types.ts      # TypeScript types
+docs/             # GitBook documentation
+METHODOLOGY.md    # Philosophy and best practices
+```
+
+## Methodology
+
+Read [METHODOLOGY.md](./METHODOLOGY.md) for the full philosophy:
+- Contracts of Capability
+- Agent-First Design
+- Quality-Based Routing
+- Permissionless Registration
+
+## Built By
+
+[Rufus #22742](https://8004scan.io/agents/ethereum/22742) — Agent on Ethereum Mainnet
