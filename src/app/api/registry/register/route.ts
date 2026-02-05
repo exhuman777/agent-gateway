@@ -1,12 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import { registerAPI } from "@/lib/registry";
+import { checkRateLimit, getClientIP } from "@/lib/ratelimit";
 import type { APIRegistration } from "@/lib/types";
 
 export const runtime = "nodejs";
 
+const VALID_CATEGORIES = [
+  "research", "market-data", "image-gen", "code", "translation",
+  "summarization", "embeddings", "web-scraping", "audio", "video", "other"
+];
+
+// Blocked endpoints for security
+const BLOCKED_PATTERNS = [
+  /^https?:\/\/localhost/i,
+  /^https?:\/\/127\./,
+  /^https?:\/\/10\./,
+  /^https?:\/\/192\.168\./,
+  /^https?:\/\/172\.(1[6-9]|2[0-9]|3[01])\./,
+];
+
 // POST /api/registry/register - Register a new API
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIP = getClientIP(request);
+    const rateLimit = checkRateLimit(clientIP, true);
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded",
+          retry_after_ms: rateLimit.resetIn,
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetIn / 1000)),
+          },
+        }
+      );
+    }
+
     const body: APIRegistration = await request.json();
 
     // Validate required fields
@@ -17,12 +52,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate name length
+    if (body.name.length < 3 || body.name.length > 100) {
+      return NextResponse.json(
+        { error: "Name must be 3-100 characters" },
+        { status: 400 }
+      );
+    }
+
+    // Validate category
+    if (!VALID_CATEGORIES.includes(body.category)) {
+      return NextResponse.json(
+        { error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
     // Validate endpoint URL
+    let endpointUrl: URL;
     try {
-      new URL(body.endpoint);
+      endpointUrl = new URL(body.endpoint);
     } catch {
       return NextResponse.json(
         { error: "Invalid endpoint URL" },
+        { status: 400 }
+      );
+    }
+
+    // Block internal/private endpoints
+    if (BLOCKED_PATTERNS.some(pattern => pattern.test(body.endpoint))) {
+      return NextResponse.json(
+        { error: "Private/internal endpoints not allowed" },
+        { status: 400 }
+      );
+    }
+
+    // Must be HTTPS in production
+    if (endpointUrl.protocol !== "https:" && process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { error: "Endpoint must use HTTPS" },
         { status: 400 }
       );
     }
@@ -35,6 +103,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (body.pricing.price < 0) {
+      return NextResponse.json(
+        { error: "Price cannot be negative" },
+        { status: 400 }
+      );
+    }
+
     // Generate provider ID (in production, this would come from auth)
     const providerId = body.providerWallet
       ? body.providerWallet.slice(0, 10)
@@ -42,11 +117,18 @@ export async function POST(request: NextRequest) {
 
     const listing = await registerAPI(body, providerId);
 
-    return NextResponse.json({
-      success: true,
-      listing,
-      message: "API registered successfully. Status: pending review.",
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        listing,
+        message: "API registered successfully. Status: pending review. An admin will review your submission.",
+      },
+      {
+        headers: {
+          "X-RateLimit-Remaining": String(rateLimit.remaining),
+        },
+      }
+    );
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(

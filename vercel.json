@@ -9,5 +9,11 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/v1/health-check",
+      "schedule": "0 */6 * * *"
+    }
+  ]
 }

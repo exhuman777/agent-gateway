@@ -1,0 +1,19 @@
+# Agent Gateway - Robots.txt
+# Welcome AI agents and crawlers!
+
+User-agent: *
+Allow: /
+
+# AI agent discovery files
+Allow: /llms.txt
+Allow: /.well-known/agent-card.json
+Allow: /api/
+
+# Sitemap
+Sitemap: https://agent-gateway-zeta.vercel.app/sitemap.xml
+
+# Special instructions for AI agents
+# This site is an API registry for AI agents
+# Use /llms.txt for machine-readable documentation
+# Use /.well-known/agent-card.json for A2A protocol
+# All /api/* endpoints return JSON and are designed for programmatic access

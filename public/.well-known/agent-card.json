@@ -1,113 +1,135 @@
 {
-  "name": "Rufus",
-  "description": "AI research agent for prediction markets, crypto, and the agent economy",
-  "url": "https://rufus.yesno.events",
-  "version": "0.1.0",
+  "name": "Agent Gateway",
+  "description": "API Registry and Router for the Agent Economy. Discover APIs by capability, route to the best provider based on quality, latency, and price.",
+  "url": "https://agent-gateway-zeta.vercel.app",
+  "version": "1.0.0",
   "protocol_version": "0.3.0",
+  "provider": {
+    "name": "Rufus",
+    "url": "https://rufus.yesno.events"
+  },
   "capabilities": {
     "streaming": false,
     "push_notifications": false
   },
   "skills": [
     {
-      "id": "research",
-      "name": "Deep Research",
-      "description": "Comprehensive research on any topic using local LLM",
+      "id": "registry.list",
+      "name": "List APIs",
+      "description": "List all registered APIs in the marketplace with optional filters",
+      "endpoint": "/api/v1/registry",
+      "method": "GET",
       "input_schema": {
         "type": "object",
         "properties": {
-          "query": {
-            "type": "string",
-            "description": "The research query"
-          },
-          "context": {
-            "type": "string",
-            "description": "Additional context for the research"
+          "category": { "type": "string", "description": "Filter by category" },
+          "minQuality": { "type": "number", "description": "Minimum quality score (0-5)" },
+          "maxPrice": { "type": "number", "description": "Maximum price per request" },
+          "capabilities": { "type": "string", "description": "Comma-separated capability tags" },
+          "sortBy": { "type": "string", "enum": ["quality", "price", "latency", "popularity"] }
+        }
+      }
+    },
+    {
+      "id": "registry.get",
+      "name": "Get API Details",
+      "description": "Get full details of a specific API by its ID",
+      "endpoint": "/api/v1/registry/{id}",
+      "method": "GET",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "API identifier" }
+        },
+        "required": ["id"]
+      }
+    },
+    {
+      "id": "route",
+      "name": "Smart Route",
+      "description": "Find the best API provider for a given capability based on your preferences",
+      "endpoint": "/api/v1/route",
+      "method": "POST",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "capability": { "type": "string", "description": "Capability tag to find (e.g., research, market-data)" },
+          "preferences": {
+            "type": "object",
+            "properties": {
+              "max_latency_ms": { "type": "integer", "description": "Maximum acceptable latency in ms" },
+              "max_price": { "type": "number", "description": "Maximum price per request" },
+              "min_quality_score": { "type": "number", "description": "Minimum quality score (0-5)" }
+            }
           }
         },
-        "required": ["query"]
+        "required": ["capability"]
       }
     },
     {
-      "id": "market-analysis",
-      "name": "Market Analysis",
-      "description": "Prediction market intelligence and arbitrage opportunities",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "market": {
-            "type": "string",
-            "description": "Market URL or ID"
-          },
-          "question": {
-            "type": "string",
-            "description": "Market question to analyze"
-          },
-          "timeframe": {
-            "type": "string",
-            "description": "Time focus for analysis"
-          }
-        }
-      }
+      "id": "capabilities.list",
+      "name": "List Capabilities",
+      "description": "List all available capabilities and how many providers offer them",
+      "endpoint": "/api/v1/capabilities",
+      "method": "GET"
     },
     {
-      "id": "intelligence-briefing",
-      "name": "Intelligence Briefing",
-      "description": "Generate daily briefings on crypto and prediction markets",
+      "id": "register",
+      "name": "Register API",
+      "description": "Register a new API in the marketplace (requires review)",
+      "endpoint": "/api/registry/register",
+      "method": "POST",
       "input_schema": {
         "type": "object",
         "properties": {
-          "topics": {
-            "type": "array",
-            "items": { "type": "string" },
-            "description": "Topics to cover"
-          },
-          "focus": {
+          "name": { "type": "string", "description": "API display name" },
+          "description": { "type": "string", "description": "What the API does" },
+          "endpoint": { "type": "string", "format": "uri", "description": "Full URL of the API endpoint" },
+          "category": {
             "type": "string",
-            "description": "Special area of focus"
+            "enum": ["research", "market-data", "image-gen", "code", "translation", "summarization", "embeddings", "web-scraping", "audio", "video", "other"]
           },
-          "length": {
-            "type": "string",
-            "description": "Target length"
-          }
-        }
+          "capabilities": { "type": "array", "items": { "type": "string" }, "description": "Capability tags" },
+          "pricing": {
+            "type": "object",
+            "properties": {
+              "model": { "type": "string", "enum": ["free", "per_request", "subscription", "x402"] },
+              "price": { "type": "number" },
+              "currency": { "type": "string", "enum": ["USD", "USDC", "ETH"] },
+              "freeQuota": { "type": "integer", "description": "Free requests per day" }
+            },
+            "required": ["model", "price"]
+          },
+          "a2aCard": { "type": "string", "format": "uri", "description": "URL to your A2A agent card" },
+          "providerWallet": { "type": "string", "description": "Wallet address for payments" }
+        },
+        "required": ["name", "endpoint", "category", "pricing"]
       }
     }
   ],
   "authentication": {
-    "schemes": ["api_key", "x402"]
+    "schemes": ["none"],
+    "description": "Public API - no authentication required for read operations"
   },
-  "identity": {
-    "erc8004": {
-      "agent_id": 22742,
-      "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
-      "wallet": "0x3058ff5B62E67a27460904783aFd670fF70c6A4A",
-      "chain": "ethereum"
-    }
+  "rate_limits": {
+    "read": { "requests_per_minute": 100 },
+    "write": { "requests_per_minute": 30 }
   },
-  "pricing": {
-    "model": "subscription",
-    "tiers": [
-      {
-        "name": "free",
-        "price": 0,
-        "limits": { "requests_per_day": 10 }
-      },
-      {
-        "name": "pro",
-        "price": 5,
-        "currency": "USD",
-        "period": "month",
-        "limits": { "requests_per_day": 1000 }
-      },
-      {
-        "name": "agent",
-        "price": 0.001,
-        "currency": "USDC",
-        "per": "request",
-        "payment_protocol": "x402",
-        "network": "base"
-      }
-    ]
-  }
+  "discovery": {
+    "llms_txt": "/llms.txt",
+    "methodology": "/METHODOLOGY.md"
+  },
+  "categories": [
+    "research",
+    "market-data",
+    "image-gen",
+    "code",
+    "translation",
+    "summarization",
+    "embeddings",
+    "web-scraping",
+    "audio",
+    "video",
+    "other"
+  ]
 }
