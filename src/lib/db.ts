@@ -1,7 +1,12 @@
 import { APIListing } from './types';
 
-// Check if we're running on Vercel (serverless)
-const isServerless = process.env.VERCEL === '1' || process.env.AWS_LAMBDA_FUNCTION_NAME;
+// Check if we're running on Vercel (serverless) - check multiple indicators
+const isServerless =
+  process.env.VERCEL === '1' ||
+  process.env.VERCEL === 'true' ||
+  !!process.env.VERCEL_URL ||
+  !!process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.cwd().startsWith('/var/task');
 
 interface Database {
   apis: APIListing[];
