@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchAPIs, getCategories, getAllAPIs, registerAPI } from "@/lib/registry";
+import { searchAPIs, getCategories, registerAPI } from "@/lib/registry";
 import type { APICategory, APIRegistration } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     sortBy: sortBy || "quality",
   };
 
-  let apis = searchAPIs(filters);
+  let apis = await searchAPIs(filters);
 
   // Filter by latency if specified
   if (maxLatency) {
@@ -38,6 +38,8 @@ export async function GET(request: NextRequest) {
   if (limit) {
     apis = apis.slice(0, parseInt(limit));
   }
+
+  const categories = await getCategories();
 
   return NextResponse.json({
     "@context": CONTEXT,
@@ -76,7 +78,7 @@ export async function GET(request: NextRequest) {
         status: api.status,
       })),
       total: apis.length,
-      categories: getCategories(),
+      categories,
     },
     meta: {
       version: "1.0.0",
@@ -135,7 +137,7 @@ export async function POST(request: NextRequest) {
       ? body.providerWallet.slice(0, 10)
       : `anon-${Date.now()}`;
 
-    const listing = registerAPI(body, providerId);
+    const listing = await registerAPI(body, providerId);
 
     return NextResponse.json({
       "@context": CONTEXT,

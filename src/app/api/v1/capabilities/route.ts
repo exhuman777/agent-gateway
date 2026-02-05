@@ -7,7 +7,8 @@ const CONTEXT = "https://apipool.dev/schema/v1";
 
 // GET /api/v1/capabilities - List all available capabilities
 export async function GET() {
-  const apis = getAllAPIs();
+  const apis = await getAllAPIs();
+  const categories = await getCategories();
 
   // Collect unique capabilities with counts
   const capabilityMap = new Map<string, { count: number; providers: string[] }>();
@@ -37,7 +38,7 @@ export async function GET() {
     success: true,
     data: {
       capabilities,
-      categories: getCategories(),
+      categories,
       total_apis: apis.length,
     },
     meta: {

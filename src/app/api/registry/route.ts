@@ -17,9 +17,11 @@ export async function GET(request: NextRequest) {
 
   // Return featured/top APIs
   if (featured === "true") {
+    const apis = await getTopAPIs(10);
+    const categories = await getCategories();
     return NextResponse.json({
-      apis: getTopAPIs(10),
-      categories: getCategories(),
+      apis,
+      categories,
     });
   }
 
@@ -32,12 +34,13 @@ export async function GET(request: NextRequest) {
     sortBy: sortBy || "quality",
   };
 
-  const apis = searchAPIs(filters);
+  const apis = await searchAPIs(filters);
+  const categories = await getCategories();
 
   return NextResponse.json({
     apis,
     total: apis.length,
     filters,
-    categories: getCategories(),
+    categories,
   });
 }

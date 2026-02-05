@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const best = routeToProvider(capability, {
+    const best = await routeToProvider(capability, {
       maxLatencyMs: preferences?.max_latency_ms,
       maxPrice: preferences?.max_price,
       minQualityScore: preferences?.min_quality_score,
@@ -46,11 +46,11 @@ export async function POST(request: NextRequest) {
     // Get fallback providers if requested
     let fallbacks: typeof best[] = [];
     if (fallback_count && fallback_count > 0) {
-      const all = searchAPIs({
+      const all = await searchAPIs({
         capabilities: [capability],
         sortBy: "quality",
-      }).filter(api => api.id !== best.id);
-      fallbacks = all.slice(0, fallback_count);
+      });
+      fallbacks = all.filter(api => api.id !== best.id).slice(0, fallback_count);
     }
 
     return NextResponse.json({

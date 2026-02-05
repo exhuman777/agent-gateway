@@ -1,119 +1,187 @@
+import { supabase } from './supabase';
 import { APIListing } from './types';
 
-interface Database {
-  apis: APIListing[];
-  lastUpdated: string;
+// Convert database row to APIListing
+function rowToListing(row: any): APIListing {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    endpoint: row.endpoint,
+    category: row.category,
+    capabilities: row.capabilities || [],
+    pricing: row.pricing,
+    provider: row.provider,
+    metrics: {
+      qualityScore: row.metrics?.qualityScore || 0,
+      latencyMs: row.metrics?.latencyMs || 0,
+      uptimePercent: row.metrics?.uptimePercent || 0,
+      totalRequests: row.metrics?.totalRequests || 0,
+      successRate: row.metrics?.successRate || 0,
+      lastChecked: row.updated_at,
+    },
+    a2aCard: row.a2a_card,
+    status: row.status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
 }
 
-// In-memory storage for serverless
-let inMemoryDb: Database = { apis: [], lastUpdated: new Date().toISOString() };
-
-// Check at runtime if we're on serverless
-function isServerless(): boolean {
-  return (
-    process.env.VERCEL === '1' ||
-    process.env.VERCEL === 'true' ||
-    !!process.env.VERCEL_URL ||
-    !!process.env.AWS_LAMBDA_FUNCTION_NAME ||
-    process.cwd().startsWith('/var/task') ||
-    process.cwd().startsWith('/vercel')
-  );
+// Convert APIListing to database row
+function listingToRow(listing: APIListing) {
+  return {
+    id: listing.id,
+    name: listing.name,
+    description: listing.description,
+    endpoint: listing.endpoint,
+    category: listing.category,
+    capabilities: listing.capabilities,
+    pricing: listing.pricing,
+    provider: listing.provider,
+    metrics: listing.metrics,
+    a2a_card: listing.a2aCard,
+    status: listing.status,
+  };
 }
 
-function getFilePath(): string {
-  const { join } = require('path');
-  return join(process.cwd(), 'data', 'registry.json');
+export async function getAllAPIs(): Promise<APIListing[]> {
+  const { data, error } = await supabase
+    .from('api_listings')
+    .select('*')
+    .eq('status', 'active');
+
+  if (error) {
+    console.error('Error fetching APIs:', error);
+    return [];
+  }
+
+  return (data || []).map(rowToListing);
 }
 
-function ensureDbExists(): void {
-  if (isServerless()) return;
+export async function getAPIById(id: string): Promise<APIListing | null> {
+  const { data, error } = await supabase
+    .from('api_listings')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-  try {
-    const { existsSync, mkdirSync, writeFileSync } = require('fs');
-    const { join } = require('path');
+  if (error) {
+    console.error('Error fetching API:', error);
+    return null;
+  }
 
-    const dataDir = join(process.cwd(), 'data');
-    if (!existsSync(dataDir)) {
-      mkdirSync(dataDir, { recursive: true });
-    }
+  return data ? rowToListing(data) : null;
+}
 
-    const dbPath = getFilePath();
-    if (!existsSync(dbPath)) {
-      writeFileSync(dbPath, JSON.stringify({ apis: [], lastUpdated: new Date().toISOString() }, null, 2));
-    }
-  } catch {
-    // Silently fail on serverless - will use in-memory
+export async function saveAPI(api: APIListing): Promise<void> {
+  const row = listingToRow(api);
+
+  const { error } = await supabase
+    .from('api_listings')
+    .upsert(row, { onConflict: 'id' });
+
+  if (error) {
+    console.error('Error saving API:', error);
+    throw error;
   }
 }
 
-export function readDb(): Database {
-  if (isServerless()) {
-    return inMemoryDb;
+export async function deleteAPI(id: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('api_listings')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting API:', error);
+    return false;
   }
 
-  try {
-    ensureDbExists();
-    const { readFileSync } = require('fs');
-    const data = readFileSync(getFilePath(), 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return inMemoryDb;
+  return true;
+}
+
+export async function updateAPIMetrics(id: string, metrics: Partial<APIListing['metrics']>): Promise<void> {
+  const { data: existing } = await supabase
+    .from('api_listings')
+    .select('metrics')
+    .eq('id', id)
+    .single();
+
+  if (!existing) return;
+
+  const newMetrics = { ...existing.metrics, ...metrics };
+
+  const { error } = await supabase
+    .from('api_listings')
+    .update({
+      metrics: newMetrics,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating metrics:', error);
   }
 }
 
-export function writeDb(db: Database): void {
-  db.lastUpdated = new Date().toISOString();
+export async function searchAPIs(filters: {
+  category?: string;
+  capability?: string;
+  minQuality?: number;
+  maxPrice?: number;
+}): Promise<APIListing[]> {
+  let query = supabase
+    .from('api_listings')
+    .select('*')
+    .eq('status', 'active');
 
-  if (isServerless()) {
-    inMemoryDb = db;
-    return;
+  if (filters.category) {
+    query = query.eq('category', filters.category);
   }
 
-  try {
-    ensureDbExists();
-    const { writeFileSync } = require('fs');
-    writeFileSync(getFilePath(), JSON.stringify(db, null, 2));
-  } catch {
-    inMemoryDb = db;
+  if (filters.capability) {
+    query = query.contains('capabilities', [filters.capability]);
   }
-}
 
-export function getAllAPIs(): APIListing[] {
-  return readDb().apis.filter(api => api.status === 'active');
-}
+  const { data, error } = await query;
 
-export function getAPIById(id: string): APIListing | undefined {
-  return readDb().apis.find(api => api.id === id);
-}
-
-export function saveAPI(api: APIListing): void {
-  const db = readDb();
-  const index = db.apis.findIndex(a => a.id === api.id);
-  if (index >= 0) {
-    db.apis[index] = api;
-  } else {
-    db.apis.push(api);
+  if (error) {
+    console.error('Error searching APIs:', error);
+    return [];
   }
-  writeDb(db);
+
+  let results = (data || []).map(rowToListing);
+
+  // Client-side filtering for JSONB fields
+  if (filters.minQuality !== undefined) {
+    results = results.filter(api => api.metrics.qualityScore >= filters.minQuality!);
+  }
+
+  if (filters.maxPrice !== undefined) {
+    results = results.filter(api => api.pricing.price <= filters.maxPrice!);
+  }
+
+  // Sort by quality score
+  results.sort((a, b) => b.metrics.qualityScore - a.metrics.qualityScore);
+
+  return results;
 }
 
-export function deleteAPI(id: string): boolean {
-  const db = readDb();
-  const index = db.apis.findIndex(a => a.id === id);
-  if (index >= 0) {
-    db.apis.splice(index, 1);
-    writeDb(db);
-    return true;
-  }
-  return false;
-}
+export async function getCategories(): Promise<{ name: string; count: number }[]> {
+  const { data, error } = await supabase
+    .from('api_listings')
+    .select('category')
+    .eq('status', 'active');
 
-export function updateAPIMetrics(id: string, metrics: Partial<APIListing['metrics']>): void {
-  const db = readDb();
-  const api = db.apis.find(a => a.id === id);
-  if (api) {
-    api.metrics = { ...api.metrics, ...metrics };
-    api.updatedAt = new Date().toISOString();
-    writeDb(db);
+  if (error) {
+    console.error('Error fetching categories:', error);
+    return [];
   }
+
+  const counts = new Map<string, number>();
+  (data || []).forEach(row => {
+    counts.set(row.category, (counts.get(row.category) || 0) + 1);
+  });
+
+  return Array.from(counts.entries()).map(([name, count]) => ({ name, count }));
 }

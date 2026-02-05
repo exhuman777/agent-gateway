@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       ? body.providerWallet.slice(0, 10)
       : `anon-${Date.now()}`;
 
-    const listing = registerAPI(body, providerId);
+    const listing = await registerAPI(body, providerId);
 
     return NextResponse.json({
       success: true,
