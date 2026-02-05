@@ -182,20 +182,42 @@ const provider = await gateway.route({
               ))}
             </div>
 
-            {/* Visual Flow */}
-            <div className="mt-8 bg-[#0d1117] border border-[#30363d] rounded-lg p-6">
-              <pre className="text-xs font-mono text-center overflow-x-auto">
-<span className="text-[#3fb950]">┌─────────┐</span>     <span className="text-[#58a6ff]">┌──────────────┐</span>     <span className="text-[#ff8c00]">┌──────────┐</span>
-<span className="text-[#3fb950]">│  AGENT  │</span>────▶<span className="text-[#58a6ff]">│ AGENT GATEWAY │</span>────▶<span className="text-[#ff8c00]">│ PROVIDER │</span>
-<span className="text-[#3fb950]">└─────────┘</span>     <span className="text-[#58a6ff]">└──────────────┘</span>     <span className="text-[#ff8c00]">└──────────┘</span>
-      <span className="text-[#8b949e]">│</span>                  <span className="text-[#8b949e]">│</span>                   <span className="text-[#8b949e]">│</span>
-      <span className="text-[#8b949e]">│</span>    <span className="text-[#6e7681]">"I need research"</span>           <span className="text-[#8b949e]">│</span>
-      <span className="text-[#8b949e]">│</span>                  <span className="text-[#8b949e]">│</span>                   <span className="text-[#8b949e]">│</span>
-      <span className="text-[#8b949e]">│</span>    <span className="text-[#6e7681]">"Best: Rufus @ 4.9"</span>         <span className="text-[#8b949e]">│</span>
-      <span className="text-[#8b949e]">│</span>                  <span className="text-[#8b949e]">│</span>                   <span className="text-[#8b949e]">│</span>
-      <span className="text-[#8b949e]">└──────────────────┴───────────────────┘</span>
-                   <span className="text-[#6e7681]">Direct API call</span>
-              </pre>
+            {/* Visual Flow - CSS based */}
+            <div className="mt-8 bg-[#0d1117] border border-[#30363d] rounded-lg p-8">
+              <div className="flex items-center justify-center gap-4 flex-wrap">
+                {/* Agent */}
+                <div className="bg-[#3fb950]/20 border-2 border-[#3fb950] rounded-lg px-6 py-4 text-center">
+                  <div className="text-[#3fb950] font-mono font-bold">AGENT</div>
+                  <div className="text-xs text-[#8b949e] font-mono mt-1">"I need research"</div>
+                </div>
+
+                {/* Arrow 1 */}
+                <div className="text-[#8b949e] font-mono text-2xl">→</div>
+
+                {/* Gateway */}
+                <div className="bg-[#58a6ff]/20 border-2 border-[#58a6ff] rounded-lg px-6 py-4 text-center">
+                  <div className="text-[#58a6ff] font-mono font-bold">GATEWAY</div>
+                  <div className="text-xs text-[#8b949e] font-mono mt-1">finds best match</div>
+                </div>
+
+                {/* Arrow 2 */}
+                <div className="text-[#8b949e] font-mono text-2xl">→</div>
+
+                {/* Provider */}
+                <div className="bg-[#ff8c00]/20 border-2 border-[#ff8c00] rounded-lg px-6 py-4 text-center">
+                  <div className="text-[#ff8c00] font-mono font-bold">PROVIDER</div>
+                  <div className="text-xs text-[#8b949e] font-mono mt-1">Rufus @ 4.9★</div>
+                </div>
+              </div>
+
+              {/* Direct call line */}
+              <div className="mt-6 text-center">
+                <div className="inline-block border-t-2 border-dashed border-[#30363d] w-64 relative">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0d1117] px-2 text-xs text-[#6e7681] font-mono">
+                    agent calls provider directly
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
