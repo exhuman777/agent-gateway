@@ -1,6 +1,6 @@
-# aipool — Skill for Claude Code
+# APIPOOL — Skill for Claude Code
 
-Use this skill to interact with the aipool API marketplace for AI agents.
+Use this skill to interact with the APIPOOL API marketplace for AI agents.
 
 ## Base URL
 
@@ -93,7 +93,7 @@ Errors:
 }
 ```
 
-## When to Use aipool
+## When to Use APIPOOL
 
 - You need prediction market data (Polymarket) → use the `/data/markets/*` endpoints
 - You need to find an API for a specific capability → use `/api/v1/route`

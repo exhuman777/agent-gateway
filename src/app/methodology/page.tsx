@@ -7,7 +7,7 @@ export default function MethodologyPage() {
       <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">aipool</Link>
+            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</Link>
             <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">methodology</span>
           </div>
           <div className="flex items-center gap-6">
@@ -21,7 +21,7 @@ export default function MethodologyPage() {
       <main className="pt-14 max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-mono font-bold text-white mb-4">Methodology</h1>
         <p className="text-sm text-white/40 font-mono mb-16 max-w-xl">
-          How aipool routes agents to the best API. Every formula, every decision, every score — documented.
+          How APIPOOL routes agents to the best API. Every formula, every decision, every score — documented.
         </p>
 
         {/* 1. THE ROUTING MODEL */}
@@ -31,13 +31,13 @@ export default function MethodologyPage() {
 
           <div className="text-sm font-mono text-white/50 leading-relaxed space-y-4 mb-8">
             <p>
-              aipool is a <span className="text-white">capability-based router</span>. Agents don&apos;t query by URL or
+              APIPOOL is a <span className="text-white">capability-based router</span>. Agents don&apos;t query by URL or
               provider name — they query by what they need. The gateway matches the request against all
               registered providers, scores them, and returns the best endpoint with fallbacks.
             </p>
             <p>
               This is fundamentally different from API gateways like Kong or Apigee, which route by
-              path/URL. aipool routes by <span className="text-white">semantic capability</span>. An agent requesting
+              path/URL. APIPOOL routes by <span className="text-white">semantic capability</span>. An agent requesting
               &quot;prediction-markets&quot; gets the best prediction market provider, regardless of its URL structure.
             </p>
           </div>
@@ -45,7 +45,7 @@ export default function MethodologyPage() {
           <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-8">
             <div className="text-xs font-mono text-white/30 mb-4">ROUTING FLOW</div>
             <pre className="text-xs font-mono text-white/40 leading-relaxed">
-{`Agent Request                  aipool                         Provider
+{`Agent Request                  APIPOOL                         Provider
      |                            |                              |
      |  POST /api/v1/route        |                              |
      |  { capability: "X" }       |                              |
@@ -148,7 +148,7 @@ This provider routes first for "market-data" capability.`}
 
           <div className="text-sm font-mono text-white/50 leading-relaxed space-y-4 mb-8">
             <p>
-              aipool runs automated health checks via Vercel Cron. Every check pings each provider&apos;s
+              APIPOOL runs automated health checks via Vercel Cron. Every check pings each provider&apos;s
               endpoint, measures response time, validates the response format, and updates the quality score.
             </p>
           </div>
@@ -184,9 +184,9 @@ This provider routes first for "market-data" capability.`}
 
           <div className="text-sm font-mono text-white/50 leading-relaxed space-y-4 mb-8">
             <p>
-              The Polymarket data pipeline demonstrates how aipool serves pre-computed data without
+              The Polymarket data pipeline demonstrates how APIPOOL serves pre-computed data without
               requiring an LLM or any always-on infrastructure. This is the reference architecture
-              for data providers on aipool.
+              for data providers on APIPOOL.
             </p>
           </div>
 
@@ -272,7 +272,7 @@ This provider routes first for "market-data" capability.`}
                 agent-to-agent communication. Anthropic&apos;s MCP (with <span className="text-white">16,670+ servers</span>,
                 a 16,000% ecosystem growth) handles agent-to-tool connections. But neither solves
                 discovery — how does an agent find the <span className="text-white">right</span> API for its
-                current task? aipool fills this gap with capability-based routing and quality scoring.
+                current task? APIPOOL fills this gap with capability-based routing and quality scoring.
               </p>
             </div>
 
@@ -292,7 +292,7 @@ This provider routes first for "market-data" capability.`}
               <p>
                 Most agent tasks don&apos;t need an LLM. &quot;What are the top prediction markets?&quot; is a database
                 query, not an inference task. Prediction markets alone processed <span className="text-white">$44 billion+
-                </span> in trading volume in 2025. aipool prioritizes pre-computed, structured data APIs that
+                </span> in trading volume in 2025. APIPOOL prioritizes pre-computed, structured data APIs that
                 return in milliseconds over LLM-dependent endpoints that take seconds. Faster, cheaper,
                 more reliable.
               </p>
@@ -304,7 +304,7 @@ This provider routes first for "market-data" capability.`}
                 The agentic AI market hits $10.9 billion in 2026, growing at 49.6% CAGR toward
                 $183 billion by 2033 (Grand View Research). As decentralized infrastructure provides
                 compute and protocols like x402 handle payments, the missing piece is a marketplace
-                layer that connects supply (API providers) with demand (AI agents). That&apos;s aipool.
+                layer that connects supply (API providers) with demand (AI agents). That&apos;s APIPOOL.
               </p>
             </div>
           </div>
@@ -321,7 +321,7 @@ This provider routes first for "market-data" capability.`}
                 <tr className="border-b border-white/10">
                   <th className="text-left p-4 text-white/30">Protocol</th>
                   <th className="text-left p-4 text-white/30">Status</th>
-                  <th className="text-left p-4 text-white/30">How aipool Uses It</th>
+                  <th className="text-left p-4 text-white/30">How APIPOOL Uses It</th>
                 </tr>
               </thead>
               <tbody className="text-white/40">

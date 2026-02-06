@@ -1,4 +1,4 @@
-# aipool
+# APIPOOL
 
 **API marketplace for AI agents.** Agents query by capability. We route to the best provider.
 
@@ -17,7 +17,7 @@ npm run dev
 1. **Register** your API with capabilities, pricing, and endpoint
 2. **Health checks** run daily, scoring providers by uptime (40%), latency (30%), success rate (30%)
 3. **Agents query** by capability (e.g., "prediction-markets"), get the best provider + fallbacks
-4. **Agents call providers directly** — aipool is a router, not a proxy
+4. **Agents call providers directly** — APIPOOL is a router, not a proxy
 
 ```bash
 # Find best provider for a capability
@@ -73,12 +73,12 @@ S = success_rate * 5            (0-5 scale)
 ```
 Agent → POST /api/v1/route { capability: "X" }
             ↓
-      aipool scores all providers with capability "X"
+      APIPOOL scores all providers with capability "X"
       Q = 0.4(uptime) + 0.3(latency) + 0.3(success_rate)
             ↓
       Returns best provider endpoint + fallbacks
             ↓
-Agent → calls provider directly (not proxied through aipool)
+Agent → calls provider directly (not proxied through APIPOOL)
 ```
 
 ### Data Pipeline (Polymarket)

@@ -48,7 +48,7 @@ export default function Home() {
       <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-mono font-bold text-white tracking-wider">aipool</span>
+            <span className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</span>
             <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">v1</span>
           </div>
           <div className="flex items-center gap-6">
@@ -69,7 +69,7 @@ export default function Home() {
         {/* HERO */}
         <section className="max-w-5xl mx-auto px-4 py-24 text-center">
           <h1 className="text-5xl md:text-7xl font-mono font-bold text-white tracking-tight mb-6">
-            aipool
+            APIPOOL
           </h1>
           <p className="text-lg text-white/60 font-mono mb-3 max-w-2xl mx-auto">
             The API marketplace for AI agents.
@@ -195,7 +195,7 @@ export default function Home() {
                 </div>
                 <div className="text-white/20 font-mono">{"--->"}</div>
                 <div className="border border-white/40 rounded px-6 py-3 text-center bg-white/[0.03]">
-                  <div className="font-mono text-sm text-white font-bold">aipool</div>
+                  <div className="font-mono text-sm text-white font-bold">APIPOOL</div>
                   <div className="text-[10px] font-mono text-white/30 mt-1">scores + routes</div>
                 </div>
                 <div className="text-white/20 font-mono">{"--->"}</div>
@@ -205,7 +205,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="text-center mt-4 text-[10px] font-mono text-white/20">
-                agent calls provider directly — aipool is a router, not a proxy
+                agent calls provider directly — APIPOOL is a router, not a proxy
               </div>
             </div>
           </div>
@@ -262,7 +262,7 @@ export default function Home() {
               <span className="text-[10px] font-mono text-white/40 border border-white/10 px-1.5 py-0.5 rounded">LIVE</span>
             </div>
             <p className="text-sm text-white/30 font-mono mb-10">
-              Reference listing. This is what a well-structured provider looks like on aipool.
+              Reference listing. This is what a well-structured provider looks like on APIPOOL.
             </p>
 
             <div className="border border-white/10 rounded-lg overflow-hidden">
@@ -330,7 +330,7 @@ export default function Home() {
 
               {/* Why it scores high */}
               <div className="border-t border-white/5 px-6 py-4 bg-white/[0.01]">
-                <div className="text-[10px] font-mono text-white/20 mb-2">Why this scores high on aipool:</div>
+                <div className="text-[10px] font-mono text-white/20 mb-2">Why this scores high on APIPOOL:</div>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-mono text-white/30">
                   <span>+ structured JSON</span>
                   <span>+ no auth for reads</span>
@@ -419,7 +419,7 @@ export default function Home() {
             <h2 className="text-3xl font-mono font-bold text-white mb-4">List your API</h2>
             <p className="text-sm text-white/30 font-mono mb-8 max-w-lg mx-auto">
               Register your API, follow the best practices, maintain uptime.
-              aipool routes agents to you automatically.
+              APIPOOL routes agents to you automatically.
             </p>
             <Link href="/register">
               <span className="inline-block px-8 py-3 bg-white text-black font-mono text-sm rounded hover:bg-white/90 transition-colors">
@@ -434,7 +434,7 @@ export default function Home() {
           <div className="max-w-5xl mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-4 font-mono text-xs text-white/20">
-                <span className="text-white/40 font-bold">aipool</span>
+                <span className="text-white/40 font-bold">APIPOOL</span>
                 <span className="text-white/5">|</span>
                 <a href="https://8004scan.io/agents/ethereum/22742" className="hover:text-white/40 transition-colors">
                   ERC-8004 #22742

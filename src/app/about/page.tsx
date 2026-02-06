@@ -7,7 +7,7 @@ export default function AboutPage() {
       <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">aipool</Link>
+            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</Link>
             <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">about</span>
           </div>
           <div className="flex items-center gap-6">
@@ -20,22 +20,22 @@ export default function AboutPage() {
 
       <main className="pt-14 max-w-4xl mx-auto px-4 py-16">
         {/* Header */}
-        <h1 className="text-4xl font-mono font-bold text-white mb-4">About aipool</h1>
+        <h1 className="text-4xl font-mono font-bold text-white mb-4">About APIPOOL</h1>
         <p className="text-sm text-white/40 font-mono mb-12 max-w-xl">
           The infrastructure layer between AI agents and the APIs they need.
         </p>
 
-        {/* What is aipool */}
+        {/* What is APIPOOL */}
         <section className="mb-16">
-          <h2 className="text-xl font-mono font-bold text-white mb-4">What is aipool?</h2>
+          <h2 className="text-xl font-mono font-bold text-white mb-4">What is APIPOOL?</h2>
           <div className="text-sm font-mono text-white/60 leading-relaxed space-y-4">
             <p>
-              aipool is an API marketplace built for AI agents. Instead of hardcoding API endpoints into agent
-              code, agents query aipool by <span className="text-white">capability</span> — like &quot;market-data&quot; or &quot;research&quot; — and
+              APIPOOL is an API marketplace built for AI agents. Instead of hardcoding API endpoints into agent
+              code, agents query APIPOOL by <span className="text-white">capability</span> — like &quot;market-data&quot; or &quot;research&quot; — and
               receive the best available provider based on real-time quality scoring.
             </p>
             <p>
-              Think of it as DNS for AI services. An agent says &quot;I need prediction market data,&quot; and aipool
+              Think of it as DNS for AI services. An agent says &quot;I need prediction market data,&quot; and APIPOOL
               returns the fastest, most reliable endpoint that can deliver it. If that provider goes down,
               the agent automatically gets a fallback. No code changes. No downtime.
             </p>
@@ -43,7 +43,7 @@ export default function AboutPage() {
               The agentic AI market is projected to hit $10.9 billion in 2026, growing at 49.6% CAGR
               toward $183 billion by 2033. IBM and Salesforce estimate over 1 billion AI agents will
               be in operation by end of 2026. As agents move from demos to production, they need
-              infrastructure that&apos;s as reliable as the services they consume. aipool is that infrastructure.
+              infrastructure that&apos;s as reliable as the services they consume. APIPOOL is that infrastructure.
             </p>
           </div>
         </section>
@@ -82,22 +82,22 @@ export default function AboutPage() {
             {[
               {
                 title: "Prediction Market Agent",
-                desc: "An AI agent needs real-time odds data. Instead of hardcoding Polymarket's API, it asks aipool for 'prediction-markets' capability. Gets structured data with price history, trends, and analytics. Zero API keys needed.",
+                desc: "An AI agent needs real-time odds data. Instead of hardcoding Polymarket's API, it asks APIPOOL for 'prediction-markets' capability. Gets structured data with price history, trends, and analytics. Zero API keys needed.",
                 tags: ["market-data", "prediction-markets", "price-history"],
               },
               {
                 title: "Research Agent",
-                desc: "A Claude-powered research agent needs to answer complex questions. It queries aipool for 'research' capability and gets routed to the highest-quality research provider. If the primary provider's Mac Mini goes offline, the agent gets a fallback automatically.",
+                desc: "A Claude-powered research agent needs to answer complex questions. It queries APIPOOL for 'research' capability and gets routed to the highest-quality research provider. If the primary provider's Mac Mini goes offline, the agent gets a fallback automatically.",
                 tags: ["research", "analysis", "summarization"],
               },
               {
                 title: "Trading Bot",
-                desc: "A DeFi trading bot needs market intelligence before executing trades. It queries aipool for market analysis, gets prediction market consensus data (no LLM latency), and uses it as a signal alongside on-chain data.",
+                desc: "A DeFi trading bot needs market intelligence before executing trades. It queries APIPOOL for market analysis, gets prediction market consensus data (no LLM latency), and uses it as a signal alongside on-chain data.",
                 tags: ["market-analysis", "arbitrage", "crypto"],
               },
               {
                 title: "Multi-Agent System",
-                desc: "A coordinator agent orchestrates 5 specialist agents. Each specialist discovers its required APIs through aipool instead of being manually configured. New capabilities can be added to the marketplace without touching agent code.",
+                desc: "A coordinator agent orchestrates 5 specialist agents. Each specialist discovers its required APIs through APIPOOL instead of being manually configured. New capabilities can be added to the marketplace without touching agent code.",
                 tags: ["A2A", "multi-agent", "discovery"],
               },
             ].map((uc, i) => (
@@ -123,12 +123,12 @@ export default function AboutPage() {
             {[
               {
                 name: "A2A Protocol",
-                desc: "Google's Agent-to-Agent protocol. 100+ partners including Microsoft, Salesforce, SAP, PayPal. Now under Linux Foundation governance. aipool serves as a discovery layer for A2A-compatible agents.",
+                desc: "Google's Agent-to-Agent protocol. 100+ partners including Microsoft, Salesforce, SAP, PayPal. Now under Linux Foundation governance. APIPOOL serves as a discovery layer for A2A-compatible agents.",
                 link: "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/",
               },
               {
                 name: "MCP",
-                desc: "Anthropic's Model Context Protocol. 16,670+ servers, 16,000% ecosystem growth. Standardizes how agents connect to tools and data. aipool APIs are MCP-compatible data sources.",
+                desc: "Anthropic's Model Context Protocol. 16,670+ servers, 16,000% ecosystem growth. Standardizes how agents connect to tools and data. APIPOOL APIs are MCP-compatible data sources.",
                 link: "https://modelcontextprotocol.io",
               },
               {
@@ -138,12 +138,12 @@ export default function AboutPage() {
               },
               {
                 name: "ERC-8004",
-                desc: "On-chain agent identity standard. Each provider gets a verifiable on-chain identity. aipool's agent ID: #22742.",
+                desc: "On-chain agent identity standard. Each provider gets a verifiable on-chain identity. APIPOOL's agent ID: #22742.",
                 link: "https://8004scan.io",
               },
               {
                 name: "JSON-LD",
-                desc: "Linked Data format for structured API responses. All aipool responses include @context for machine-readable semantics.",
+                desc: "Linked Data format for structured API responses. All APIPOOL responses include @context for machine-readable semantics.",
                 link: "https://json-ld.org",
               },
               {
@@ -175,7 +175,7 @@ export default function AboutPage() {
                   ERC-8004 #22742 &middot; Lives on a Mac Mini &middot; Built by Exhuman
                 </div>
                 <p className="text-xs font-mono text-white/40 leading-relaxed">
-                  Rufus is an always-on AI agent running on dedicated hardware. It operates the aipool
+                  Rufus is an always-on AI agent running on dedicated hardware. It operates the APIPOOL
                   marketplace, maintains the Polymarket data pipeline, runs research services, and builds
                   infrastructure for the agent economy. When the Mac Mini goes offline, the marketplace
                   continues serving data from Supabase via Vercel — zero downtime by design.

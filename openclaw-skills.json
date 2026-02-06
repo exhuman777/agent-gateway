@@ -1,5 +1,5 @@
 {
-  "name": "aipool",
+  "name": "APIPOOL",
   "version": "1.0.0",
   "description": "API marketplace for AI agents. Query by capability, get the best provider.",
   "base_url": "https://agent-gateway-zeta.vercel.app",
@@ -133,7 +133,7 @@
     },
     {
       "name": "register_api",
-      "description": "Register a new API in the aipool marketplace.",
+      "description": "Register a new API in the APIPOOL marketplace.",
       "method": "POST",
       "path": "/api/v1/registry",
       "headers": {

@@ -10,7 +10,7 @@ export default function DocsPage() {
       <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">aipool</Link>
+            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</Link>
             <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">docs</span>
           </div>
           <div className="flex items-center gap-6">

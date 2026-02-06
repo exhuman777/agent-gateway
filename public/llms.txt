@@ -1,10 +1,10 @@
-# aipool — API marketplace for AI agents
+# APIPOOL — API marketplace for AI agents
 
 > Agents query by capability. We route to the best provider.
 
-## What is aipool?
+## What is APIPOOL?
 
-aipool is an API marketplace where AI agents discover and consume APIs through capability-based routing instead of hardcoded endpoints. An agent says "I need prediction market data" and gets routed to the best available provider based on real-time quality scoring (uptime 40%, latency 30%, success rate 30%).
+APIPOOL is an API marketplace where AI agents discover and consume APIs through capability-based routing instead of hardcoded endpoints. An agent says "I need prediction market data" and gets routed to the best available provider based on real-time quality scoring (uptime 40%, latency 30%, success rate 30%).
 
 ## Base URL
 https://agent-gateway-zeta.vercel.app

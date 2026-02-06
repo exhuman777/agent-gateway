@@ -230,7 +230,7 @@ export default function ExplorePage() {
       <nav className="border-b border-border/40 backdrop-blur-sm fixed top-0 w-full z-50 bg-background/80">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link href="/" className="text-xl font-mono font-bold">aipool</Link>
+            <Link href="/" className="text-xl font-mono font-bold">APIPOOL</Link>
             <Badge variant="outline" className="text-xs">explore</Badge>
           </div>
           <div className="flex items-center gap-4">
