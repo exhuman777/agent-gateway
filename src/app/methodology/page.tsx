@@ -257,30 +257,33 @@ This provider routes first for "market-data" capability.`}
             <div>
               <h3 className="text-white mb-2">The Agent Internet is Being Built Now</h3>
               <p>
-                In January 2026 alone, x402 processed over 20 million agent-to-agent transactions.
-                ERC-8004 launched on Ethereum mainnet with over one million autonomous agents registered.
-                Average transaction prices dropped from $0.81 to $0.29 as the market converges toward
-                micropayments. This isn&apos;t theoretical — it&apos;s happening.
+                IBM and Salesforce estimate over <span className="text-white">1 billion AI agents</span> will be
+                in operation by end of 2026. Gartner predicts 40% of enterprise applications will embed
+                task-specific AI agents. x402 has processed 35M+ transactions with $10M+ volume.
+                ERC-8004 launched on Ethereum mainnet. This isn&apos;t theoretical — it&apos;s production infrastructure.
               </p>
             </div>
 
             <div>
               <h3 className="text-white mb-2">APIs Need a Discovery Layer</h3>
               <p>
-                Google&apos;s A2A protocol (backed by 50+ partners including Salesforce, SAP, PayPal) handles
-                agent-to-agent communication. Anthropic&apos;s MCP handles agent-to-tool connections. But
-                neither solves discovery — how does an agent find the <span className="text-white">right</span> API
-                for its current task? aipool fills this gap with capability-based routing and quality scoring.
+                Google&apos;s A2A protocol (backed by <span className="text-white">100+ companies</span> including
+                Microsoft, Salesforce, SAP, PayPal — now under Linux Foundation governance) handles
+                agent-to-agent communication. Anthropic&apos;s MCP (with <span className="text-white">16,670+ servers</span>,
+                a 16,000% ecosystem growth) handles agent-to-tool connections. But neither solves
+                discovery — how does an agent find the <span className="text-white">right</span> API for its
+                current task? aipool fills this gap with capability-based routing and quality scoring.
               </p>
             </div>
 
             <div>
               <h3 className="text-white mb-2">Hardcoded Endpoints Don&apos;t Scale</h3>
               <p>
-                Today, 96% of organizations report AI costs higher than expected at production scale.
-                Part of the problem: agents are built with hardcoded API dependencies. When Provider A
-                raises prices or goes down, every agent using it breaks. A marketplace with intelligent
-                routing solves this — agents get the best available provider automatically.
+                Only 11% of organizations have agentic AI in production (Deloitte). The gap between
+                pilot and production is the defining challenge. Part of the problem: agents are built
+                with hardcoded API dependencies. When Provider A raises prices or goes down, every
+                agent using it breaks. A marketplace with intelligent routing solves this — agents get
+                the best available provider automatically.
               </p>
             </div>
 
@@ -288,19 +291,20 @@ This provider routes first for "market-data" capability.`}
               <h3 className="text-white mb-2">Data APIs &gt; LLM APIs</h3>
               <p>
                 Most agent tasks don&apos;t need an LLM. &quot;What are the top prediction markets?&quot; is a database
-                query, not an inference task. aipool prioritizes pre-computed, structured data APIs that
+                query, not an inference task. Prediction markets alone processed <span className="text-white">$44 billion+
+                </span> in trading volume in 2025. aipool prioritizes pre-computed, structured data APIs that
                 return in milliseconds over LLM-dependent endpoints that take seconds. Faster, cheaper,
                 more reliable.
               </p>
             </div>
 
             <div>
-              <h3 className="text-white mb-2">The $9.89B Opportunity</h3>
+              <h3 className="text-white mb-2">The $10.9B Opportunity</h3>
               <p>
-                The agentic AI market hits $9.89 billion in 2026, growing at 42% CAGR to $57.42 billion
-                by 2031. As decentralized infrastructure (Akash, io.net, Render) provides compute and
-                protocols like x402 handle payments, the missing piece is a marketplace layer that
-                connects supply (API providers) with demand (AI agents). That&apos;s aipool.
+                The agentic AI market hits $10.9 billion in 2026, growing at 49.6% CAGR toward
+                $183 billion by 2033 (Grand View Research). As decentralized infrastructure provides
+                compute and protocols like x402 handle payments, the missing piece is a marketplace
+                layer that connects supply (API providers) with demand (AI agents). That&apos;s aipool.
               </p>
             </div>
           </div>

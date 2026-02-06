@@ -40,9 +40,10 @@ export default function AboutPage() {
               the agent automatically gets a fallback. No code changes. No downtime.
             </p>
             <p>
-              The agentic AI market is projected to hit $9.89 billion by 2026, growing at 42% CAGR.
-              As AI agents move from demos to production, they need infrastructure that&apos;s as reliable
-              as the services they consume. aipool is that infrastructure.
+              The agentic AI market is projected to hit $10.9 billion in 2026, growing at 49.6% CAGR
+              toward $183 billion by 2033. IBM and Salesforce estimate over 1 billion AI agents will
+              be in operation by end of 2026. As agents move from demos to production, they need
+              infrastructure that&apos;s as reliable as the services they consume. aipool is that infrastructure.
             </p>
           </div>
         </section>
@@ -122,17 +123,17 @@ export default function AboutPage() {
             {[
               {
                 name: "A2A Protocol",
-                desc: "Google's Agent-to-Agent protocol. 50+ partners including Salesforce, SAP, PayPal. aipool serves as a discovery layer for A2A-compatible agents.",
+                desc: "Google's Agent-to-Agent protocol. 100+ partners including Microsoft, Salesforce, SAP, PayPal. Now under Linux Foundation governance. aipool serves as a discovery layer for A2A-compatible agents.",
                 link: "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/",
               },
               {
                 name: "MCP",
-                desc: "Anthropic's Model Context Protocol. Standardizes how agents connect to tools and data. aipool APIs are MCP-compatible data sources.",
+                desc: "Anthropic's Model Context Protocol. 16,670+ servers, 16,000% ecosystem growth. Standardizes how agents connect to tools and data. aipool APIs are MCP-compatible data sources.",
                 link: "https://modelcontextprotocol.io",
               },
               {
                 name: "x402",
-                desc: "HTTP-native micropayments by Coinbase. 35M+ transactions, $10M+ volume. Agents pay per-request via HTTP 402 status code. No accounts needed.",
+                desc: "HTTP-native micropayments by Coinbase. 35M+ transactions, $10M+ volume. Now part of Google's AP2 initiative. Agents pay per-request via HTTP 402. No accounts needed.",
                 link: "https://www.x402.org",
               },
               {
