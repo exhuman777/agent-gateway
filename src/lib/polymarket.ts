@@ -76,16 +76,36 @@ function parsePrices(outcomePrices: string): [number, number] {
 
 function categorizeMarket(question: string): string {
   const q = question.toLowerCase();
-  if (q.includes('bitcoin') || q.includes('ethereum') || q.includes('crypto') || q.includes('btc') || q.includes('eth'))
+
+  // Crypto
+  if (/\b(bitcoin|ethereum|crypto|btc|eth|solana|sol|xrp|dogecoin|doge|defi|nft|blockchain|token|altcoin|binance|coinbase|memecoin)\b/.test(q)
+    || q.includes('up or down'))
     return 'crypto';
-  if (q.includes('trump') || q.includes('biden') || q.includes('president') || q.includes('election') || q.includes('congress') || q.includes('senate'))
+
+  // Politics & Geopolitics
+  if (/\b(trump|biden|president|election|congress|senate|democrat|republican|gop|governor|mayor|vote|poll|legislation|impeach|cabinet|scotus|supreme court|party|primary|inaugur|politician|political|government|minister|parliament|nato|ukraine|russia|china|israel|iran|war|ceasefire|sanction|tariff|executive order|youngkin|desantis|harris|vance|newsom|whitmer)\b/.test(q))
     return 'politics';
-  if (q.includes('nfl') || q.includes('nba') || q.includes('super bowl') || q.includes('world cup') || q.includes('championship'))
+
+  // Sports
+  if (/\b(nfl|nba|mlb|nhl|super bowl|world cup|championship|playoff|finals|mvp|soccer|football|basketball|baseball|hockey|tennis|golf|ufc|boxing|olympics|league|team|game|match|tournament|premier league|champions league|f1|formula|grand prix|world series)\b/.test(q))
     return 'sports';
-  if (q.includes('fed') || q.includes('inflation') || q.includes('gdp') || q.includes('rate') || q.includes('recession') || q.includes('stock'))
+
+  // Economics & Finance
+  if (/\b(fed|federal reserve|inflation|gdp|rate|recession|stock|s&p|nasdaq|dow|treasury|bond|yield|unemployment|jobs|cpi|ppi|interest rate|fomc|housing|market cap|ipo|earnings|revenue|profit|deficit|debt ceiling|trade deficit|tariff)\b/.test(q))
     return 'economics';
-  if (q.includes('ai') || q.includes('openai') || q.includes('google') || q.includes('apple') || q.includes('tesla'))
+
+  // Tech
+  if (/\b(ai|openai|google|apple|tesla|microsoft|meta|nvidia|amazon|spacex|neuralink|chatgpt|gpt|claude|gemini|llm|artificial intelligence|robot|autonomous|self.driving|tech|silicon valley|startup|iphone|android|chip|semiconductor)\b/.test(q))
     return 'tech';
+
+  // Culture & Entertainment
+  if (/\b(movie|film|oscar|emmy|grammy|album|song|artist|celebrity|tiktok|youtube|twitter|x\.com|instagram|streamer|podcast|book|tv show|series|netflix|disney|spotify|concert|tour|viral|meme|influencer|elon musk|kanye|drake|taylor swift)\b/.test(q))
+    return 'culture';
+
+  // Science & Climate
+  if (/\b(climate|temperature|hottest|weather|hurricane|earthquake|volcano|nasa|space|mars|moon|asteroid|pandemic|virus|covid|vaccine|fda|drug|disease|study|research|science|nature|carbon|emission|renewable|solar|wind|energy)\b/.test(q))
+    return 'science';
+
   return 'other';
 }
 
