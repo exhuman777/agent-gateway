@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { recordHealthEvent, detectAnomalies } from "@/lib/intelligence";
 
 export const runtime = "nodejs";
 
@@ -106,12 +107,25 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", api.id);
 
+    // INTELLIGENCE: Record health event for predictive orchestration
+    await recordHealthEvent({
+      provider_id: api.id,
+      is_up: isUp,
+      latency_ms: latency,
+      quality_score: newMetrics.qualityScore,
+      status_code: 0,
+    });
+
+    // INTELLIGENCE: Check for anomalies
+    const anomalies = await detectAnomalies(api.id);
+
     results.push({
       id: api.id,
       name: api.name,
       isUp,
       latency,
       newQualityScore: newMetrics.qualityScore,
+      anomalies: anomalies.length > 0 ? anomalies : undefined,
     });
   }
 

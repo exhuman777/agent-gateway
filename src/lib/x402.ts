@@ -1,0 +1,132 @@
+// x402 Payment Protocol helpers for APIPOOL
+// Implements HTTP 402 Payment Required responses per x402 standard
+// https://www.x402.org
+
+import { NextResponse } from "next/server";
+import { X402PaymentRequirements } from "./types";
+
+// USDC contract addresses by network
+const USDC_ADDRESSES: Record<string, string> = {
+  "base": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",       // Base mainnet USDC
+  "base-sepolia": "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // Base Sepolia USDC
+};
+
+// Facilitator URL (Coinbase hosted)
+const FACILITATOR_URL = "https://www.x402.org/facilitator";
+
+function getConfig() {
+  return {
+    wallet: process.env.X402_WALLET_ADDRESS || "0x3058ff5B62E67a27460904783aFd670fF70c6A4A",
+    network: process.env.X402_NETWORK || "base-sepolia",
+    price: process.env.X402_PRICE || "0.005",
+  };
+}
+
+/**
+ * Create an HTTP 402 Payment Required response
+ * Follows x402 protocol: returns payment requirements in body + headers
+ */
+export function create402Response(description: string): NextResponse {
+  const config = getConfig();
+  const usdcAddress = USDC_ADDRESSES[config.network] || USDC_ADDRESSES["base-sepolia"];
+
+  const requirements: X402PaymentRequirements = {
+    x402_version: "1",
+    wallet: config.wallet,
+    network: config.network,
+    asset: usdcAddress,
+    price: config.price,
+    description,
+  };
+
+  // Build the x402-standard response
+  const response = NextResponse.json(
+    {
+      success: false,
+      error: {
+        code: "PAYMENT_REQUIRED",
+        message: "Free tier exhausted. Pay with x402 to continue.",
+        x402: requirements,
+        how_to_pay: {
+          step_1: "Include payment in X-PAYMENT or PAYMENT header",
+          step_2: "Use @x402/fetch or any x402-compatible client",
+          step_3: "Payment is verified via facilitator before serving response",
+          facilitator: FACILITATOR_URL,
+          npm_client: "@x402/fetch",
+          docs: "https://docs.cdp.coinbase.com/x402/welcome",
+        },
+      },
+    },
+    { status: 402 }
+  );
+
+  // Set x402 protocol headers
+  response.headers.set(
+    "X-PAYMENT-REQUIRED",
+    JSON.stringify({
+      accepts: [
+        {
+          scheme: "exact",
+          network: `eip155:${config.network === "base" ? "8453" : "84532"}`,
+          maxAmountRequired: config.price,
+          resource: "/api/v1/search",
+          description,
+          payTo: config.wallet,
+          asset: usdcAddress,
+        },
+      ],
+    })
+  );
+
+  return response;
+}
+
+/**
+ * Verify x402 payment header
+ * For now: checks that a payment header exists (full verification via facilitator in production)
+ * Returns payment info if valid, null if no payment header present
+ */
+export function verifyPaymentHeader(
+  request: Request
+): { wallet?: string; tx?: string; amount?: string } | null {
+  // x402 clients send payment proof in these headers
+  const paymentHeader =
+    request.headers.get("X-PAYMENT") ||
+    request.headers.get("PAYMENT") ||
+    request.headers.get("PAYMENT-SIGNATURE");
+
+  if (!paymentHeader) {
+    return null;
+  }
+
+  // Parse the payment header
+  try {
+    const payment = JSON.parse(paymentHeader);
+    return {
+      wallet: payment.from || payment.sender || payment.wallet,
+      tx: payment.tx || payment.transaction || payment.hash,
+      amount: payment.amount || payment.value,
+    };
+  } catch {
+    // If it's not JSON, it might be a raw signature/hash
+    return {
+      tx: paymentHeader,
+    };
+  }
+}
+
+/**
+ * Get x402 pricing info for display purposes
+ */
+export function getX402PricingInfo() {
+  const config = getConfig();
+  return {
+    price_per_call: `$${config.price} USDC`,
+    network: config.network,
+    wallet: config.wallet,
+    free_daily_limit: parseInt(process.env.X402_FREE_DAILY_LIMIT || "10"),
+    asset: USDC_ADDRESSES[config.network] || USDC_ADDRESSES["base-sepolia"],
+    facilitator: FACILITATOR_URL,
+    client_library: "@x402/fetch",
+  };
+}

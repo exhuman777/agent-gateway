@@ -81,6 +81,48 @@ export const QUALITY_WEIGHTS = {
   userRating: 0.2,
 };
 
+// Brave Search result
+export interface BraveSearchResult {
+  title: string;
+  url: string;
+  description: string;
+  age?: string;
+  language?: string;
+  favicon?: string;
+}
+
+// Usage log entry for paid API calls
+export interface UsageLogEntry {
+  endpoint: string;
+  caller_ip: string;
+  caller_wallet?: string;
+  payment_tx?: string;
+  payment_amount?: number;
+  query: string;
+  latency_ms: number;
+  is_free_tier: boolean;
+  status: "success" | "error" | "payment_required";
+  created_at?: string;
+}
+
+// Free tier status
+export interface FreeTierStatus {
+  allowed: boolean;
+  remaining: number;
+  limit: number;
+  resets_at: string;
+}
+
+// x402 payment requirements
+export interface X402PaymentRequirements {
+  x402_version: string;
+  wallet: string;
+  network: string;
+  asset: string;
+  price: string;
+  description: string;
+}
+
 export function calculateQualityScore(metrics: Partial<APIMetrics>): number {
   const uptime = (metrics.uptimePercent || 0) / 100;
   const latencyScore = Math.max(0, 1 - (metrics.latencyMs || 5000) / 10000);

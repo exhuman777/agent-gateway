@@ -130,13 +130,12 @@ export default function Home() {
                 </p>
                 <pre className="text-xs font-mono text-white/50 bg-black/30 rounded p-3 overflow-x-auto">
 {`POST /api/v1/route
-{
-  "capability": "market-data",
-  "preferences": {
-    "max_latency_ms": 2000,
-    "min_quality_score": 4.0
-  }
-}`}
+
+// exact match:
+{ "capability": "market-data" }
+
+// or natural language:
+{ "query": "crypto prices" }`}
                 </pre>
               </div>
 
@@ -208,6 +207,48 @@ export default function Home() {
                 agent calls provider directly — APIPOOL is a router, not a proxy
               </div>
             </div>
+
+            {/* 4 Intelligence Pillars */}
+            <div className="mt-12">
+              <div className="text-xs font-mono text-white/20 mb-6">4 PILLARS OF INTELLIGENT ROUTING</div>
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  {
+                    id: "P1",
+                    name: "Self-Learning Routing",
+                    desc: "Scores adapt from real routing outcomes. Providers that consistently deliver get boosted (1.2x). Unreliable ones get penalized (0.8x).",
+                  },
+                  {
+                    id: "P2",
+                    name: "Predictive Orchestration",
+                    desc: "Health trends analyzed in real-time. Providers showing degradation are demoted BEFORE they fail. No agent downtime.",
+                  },
+                  {
+                    id: "P3",
+                    name: "Anomaly Detection",
+                    desc: "Latency spikes, error bursts, downtime events are detected by comparing recent checks against baseline. Anomalies reduce scores immediately.",
+                  },
+                  {
+                    id: "P4",
+                    name: "Contextual Understanding",
+                    desc: "Agents send natural language queries. APIPOOL parses them into capabilities. No LLM needed — keyword extraction + capability mapping.",
+                  },
+                ].map(p => (
+                  <div key={p.id} className="border border-white/10 rounded-lg p-4 bg-white/[0.01]">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[10px] font-mono text-white/20 border border-white/10 px-1.5 py-0.5 rounded">{p.id}</span>
+                      <span className="text-xs font-mono text-white">{p.name}</span>
+                    </div>
+                    <p className="text-[10px] font-mono text-white/30 leading-relaxed">{p.desc}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="text-center mt-4">
+                <Link href="/methodology" className="text-[10px] font-mono text-white/20 hover:text-white/40 transition-colors">
+                  full methodology with formulas →
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -237,6 +278,8 @@ export default function Home() {
                     { method: "GET", endpoint: "/api/v1/data/markets/search?q=", desc: "Search prediction markets" },
                     { method: "GET", endpoint: "/api/v1/data/markets/{slug}", desc: "Market detail + price history" },
                     { method: "GET", endpoint: "/api/v1/data/markets/stats", desc: "Market stats overview" },
+                    { method: "GET", endpoint: "/api/v1/intelligence", desc: "Intelligence system status + provider predictions", highlight: true },
+                    { method: "POST", endpoint: "/api/v1/intelligence", desc: "Test contextual understanding (NL → capability)" },
                   ].map((ep, i) => (
                     <tr key={i} className={`border-b border-white/5 last:border-0 ${ep.highlight ? 'bg-white/[0.02]' : ''}`}>
                       <td className="p-4">

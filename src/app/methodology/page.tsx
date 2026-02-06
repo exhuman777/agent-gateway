@@ -70,10 +70,174 @@ export default function MethodologyPage() {
           </div>
         </section>
 
-        {/* 2. QUALITY SCORE FORMULA */}
+        {/* 2. THE 4 PILLARS OF INTELLIGENT ROUTING */}
         <section className="mb-20">
           <div className="text-xs font-mono text-white/20 mb-2">02</div>
-          <h2 className="text-2xl font-mono font-bold text-white mb-6">Quality Score Formula</h2>
+          <h2 className="text-2xl font-mono font-bold text-white mb-6">4 Pillars of Intelligent Routing</h2>
+
+          <div className="text-sm font-mono text-white/50 leading-relaxed space-y-4 mb-10">
+            <p>
+              APIPOOL goes beyond static quality scores. The intelligence layer applies four
+              real-time systems that continuously adapt routing decisions. Each pillar produces
+              a multiplier that adjusts the base quality score.
+            </p>
+          </div>
+
+          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-10">
+            <div className="text-center mb-4">
+              <div className="text-base font-mono text-white">effective_score = base_quality x learning x predictive x anomaly</div>
+              <div className="text-[10px] font-mono text-white/30 mt-1">where each multiplier is 0.5-1.2 based on live data</div>
+            </div>
+          </div>
+
+          {/* Pillar 1 */}
+          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-mono text-white/20 border border-white/10 px-2 py-0.5 rounded">P1</span>
+              <h3 className="font-mono text-sm text-white">Self-Learning Routing</h3>
+            </div>
+            <p className="text-xs font-mono text-white/40 leading-relaxed mb-4">
+              Every routing decision is recorded with its outcome. Providers that consistently
+              deliver successful responses get a boost (up to 1.2x). Providers that fail after
+              being selected get penalized (down to 0.8x). The system learns which providers
+              actually work, not just which ones claim to work.
+            </p>
+            <div className="border border-white/5 rounded p-4 bg-black/20">
+              <div className="text-[10px] font-mono text-white/30 mb-2">FORMULA</div>
+              <pre className="text-xs font-mono text-white/40">
+{`learning_multiplier = 1.0 + success_bonus + latency_bonus
+
+success_bonus = (success_rate - 0.7) × 0.5
+  // 100% success → +0.15, 50% → -0.10
+
+latency_bonus = clamp(-0.05, (1500 - avg_latency) / 20000, +0.05)
+  // <500ms → +0.05, >3000ms → -0.05
+
+Based on 50 most recent routing events per provider.
+Minimum 5 events required; returns 1.0 if insufficient data.`}
+              </pre>
+            </div>
+          </div>
+
+          {/* Pillar 2 */}
+          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-mono text-white/20 border border-white/10 px-2 py-0.5 rounded">P2</span>
+              <h3 className="font-mono text-sm text-white">Predictive Orchestration</h3>
+            </div>
+            <p className="text-xs font-mono text-white/40 leading-relaxed mb-4">
+              Health check data is analyzed for trends. If latency is rising or success rate is
+              dropping compared to the baseline, the provider is proactively demoted BEFORE it
+              actually fails. This prevents agents from being routed to degrading providers.
+            </p>
+            <div className="border border-white/5 rounded p-4 bg-black/20">
+              <div className="text-[10px] font-mono text-white/30 mb-2">ALGORITHM</div>
+              <pre className="text-xs font-mono text-white/40">
+{`Split last 10 health checks: recent (3) vs baseline (7)
+
+latency_trend:
+  recent_avg > baseline_avg × 1.2 → "degrading"
+  recent_avg < baseline_avg × 0.8 → "improving"
+  else → "stable"
+
+success_trend:
+  recent_rate < baseline_rate - 0.15 → "degrading"
+  recent_rate > baseline_rate + 0.15 → "improving"
+
+prediction:
+  both degrading → "failing"    → multiplier: 0.7
+  one degrading  → "at_risk"    → multiplier: 0.9
+  else           → "healthy"    → multiplier: 1.0`}
+              </pre>
+            </div>
+          </div>
+
+          {/* Pillar 3 */}
+          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-mono text-white/20 border border-white/10 px-2 py-0.5 rounded">P3</span>
+              <h3 className="font-mono text-sm text-white">Anomaly Detection</h3>
+            </div>
+            <p className="text-xs font-mono text-white/40 leading-relaxed mb-4">
+              Unusual provider behavior is flagged in real-time. Latency spikes, error bursts,
+              and downtime events are detected by comparing recent checks against the baseline.
+              Anomalies directly reduce the provider&apos;s effective score.
+            </p>
+            <div className="border border-white/5 rounded p-4 bg-black/20">
+              <div className="text-[10px] font-mono text-white/30 mb-2">DETECTION RULES</div>
+              <pre className="text-xs font-mono text-white/40">
+{`latency_spike:
+  recent_avg_latency > 2× baseline_avg → medium
+  recent_avg_latency > 3× baseline_avg → high
+
+error_burst:
+  2/3 recent checks failed → medium
+  3/3 recent checks failed → high (also triggers "downtime")
+
+Score penalty:
+  high anomaly  = -15% per anomaly
+  medium anomaly = -5% per anomaly
+  minimum multiplier = 0.5 (floor)`}
+              </pre>
+            </div>
+          </div>
+
+          {/* Pillar 4 */}
+          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-mono text-white/20 border border-white/10 px-2 py-0.5 rounded">P4</span>
+              <h3 className="font-mono text-sm text-white">Contextual Understanding</h3>
+            </div>
+            <p className="text-xs font-mono text-white/40 leading-relaxed mb-4">
+              Agents don&apos;t need to know exact capability strings. They can send natural language
+              queries like &quot;I need crypto market prices&quot; and APIPOOL parses it into the correct
+              capability. No LLM involved — pure keyword extraction + capability mapping.
+            </p>
+            <div className="border border-white/5 rounded p-4 bg-black/20">
+              <div className="text-[10px] font-mono text-white/30 mb-2">HOW IT WORKS</div>
+              <pre className="text-xs font-mono text-white/40">
+{`Input:  { "query": "latest crypto prediction market odds" }
+
+Tokenize → ["latest", "crypto", "prediction", "market", "odds"]
+
+Match against 9 capability maps:
+  prediction-markets: "prediction" ✓, "odds" ✓    → score: 2
+  market-data:        "market" ✓                    → score: 1
+  crypto:             "crypto" ✓                    → score: 1
+  news:               "latest" ✓                    → score: 1
+
+Output: capability = "prediction-markets" (highest score)
+        confidence = 0.5 (5 hits / 5 tokens × 0.5)
+
+Test it: POST /api/v1/intelligence { "query": "..." }`}
+              </pre>
+            </div>
+          </div>
+
+          {/* Live endpoint */}
+          <div className="border border-white/10 rounded-lg p-4 bg-white/[0.01]">
+            <div className="text-xs font-mono text-white/30 mb-2">TRY IT LIVE</div>
+            <pre className="text-xs font-mono text-white/40 overflow-x-auto">
+{`# See intelligence system status
+curl https://agent-gateway-zeta.vercel.app/api/v1/intelligence
+
+# Test contextual understanding
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/intelligence \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "I need crypto market prediction data"}'
+
+# Route with natural language (no capability string needed)
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/route \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "trending prediction market odds"}'`}
+            </pre>
+          </div>
+        </section>
+
+        {/* 3. QUALITY SCORE FORMULA */}
+        <section className="mb-20">
+          <div className="text-xs font-mono text-white/20 mb-2">03</div>
+          <h2 className="text-2xl font-mono font-bold text-white mb-6">Base Quality Score Formula</h2>
 
           <div className="text-sm font-mono text-white/50 leading-relaxed mb-8">
             <p>
@@ -141,9 +305,9 @@ This provider routes first for "market-data" capability.`}
           </div>
         </section>
 
-        {/* 3. HEALTH CHECKS */}
+        {/* 4. HEALTH CHECKS */}
         <section className="mb-20">
-          <div className="text-xs font-mono text-white/20 mb-2">03</div>
+          <div className="text-xs font-mono text-white/20 mb-2">04</div>
           <h2 className="text-2xl font-mono font-bold text-white mb-6">Health Check System</h2>
 
           <div className="text-sm font-mono text-white/50 leading-relaxed space-y-4 mb-8">
@@ -177,9 +341,9 @@ This provider routes first for "market-data" capability.`}
           </div>
         </section>
 
-        {/* 4. DATA PIPELINE */}
+        {/* 5. DATA PIPELINE */}
         <section className="mb-20">
-          <div className="text-xs font-mono text-white/20 mb-2">04</div>
+          <div className="text-xs font-mono text-white/20 mb-2">05</div>
           <h2 className="text-2xl font-mono font-bold text-white mb-6">Data Pipeline Architecture</h2>
 
           <div className="text-sm font-mono text-white/50 leading-relaxed space-y-4 mb-8">
@@ -248,9 +412,9 @@ This provider routes first for "market-data" capability.`}
           </div>
         </section>
 
-        {/* 5. WHY THIS IS THE FUTURE */}
+        {/* 6. WHY THIS IS THE FUTURE */}
         <section className="mb-20">
-          <div className="text-xs font-mono text-white/20 mb-2">05</div>
+          <div className="text-xs font-mono text-white/20 mb-2">06</div>
           <h2 className="text-2xl font-mono font-bold text-white mb-6">Why This Is the Future</h2>
 
           <div className="text-sm font-mono text-white/50 leading-relaxed space-y-6">
@@ -310,9 +474,9 @@ This provider routes first for "market-data" capability.`}
           </div>
         </section>
 
-        {/* 6. PROTOCOL COMPATIBILITY */}
+        {/* 7. PROTOCOL COMPATIBILITY */}
         <section className="mb-16">
-          <div className="text-xs font-mono text-white/20 mb-2">06</div>
+          <div className="text-xs font-mono text-white/20 mb-2">07</div>
           <h2 className="text-2xl font-mono font-bold text-white mb-6">Protocol Compatibility</h2>
 
           <div className="border border-white/10 rounded-lg overflow-hidden">
