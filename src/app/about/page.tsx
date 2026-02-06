@@ -1,22 +1,10 @@
 import Link from "next/link";
+import { Nav } from "@/components/Nav";
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-[#e0e0e0]">
-      {/* Nav */}
-      <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
-        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</Link>
-            <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">about</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="/explore" className="text-xs text-white/40 hover:text-white transition-colors font-mono">explore</Link>
-            <Link href="/docs" className="text-xs text-white/40 hover:text-white transition-colors font-mono">docs</Link>
-            <Link href="/methodology" className="text-xs text-white/40 hover:text-white transition-colors font-mono">methodology</Link>
-          </div>
-        </div>
-      </nav>
+      <Nav active="about" />
 
       <main className="pt-14 max-w-4xl mx-auto px-4 py-16">
         {/* Header */}
@@ -63,13 +51,145 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="border border-white/10 rounded-lg p-6">
-              <div className="text-xs font-mono text-white/30 mb-3">WITH AIPOOL</div>
+              <div className="text-xs font-mono text-white/30 mb-3">WITH APIPOOL</div>
               <div className="space-y-3 text-xs font-mono text-white/40">
                 <div className="flex gap-2"><span className="text-white/60">+</span> Query by capability, not URL</div>
                 <div className="flex gap-2"><span className="text-white/60">+</span> Automatic failover to fallbacks</div>
                 <div className="flex gap-2"><span className="text-white/60">+</span> Quality scores from real health checks</div>
                 <div className="flex gap-2"><span className="text-white/60">+</span> Standard response format</div>
                 <div className="flex gap-2"><span className="text-white/60">+</span> A2A + MCP native discovery</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* What You Can Do Right Now */}
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-4">What You Can Do Right Now</h2>
+          <div className="grid md:grid-cols-2 gap-4 mb-8">
+            {[
+              {
+                title: "Brave Web Search",
+                desc: "Search the web from any app. 10 free calls/day, then $0.005/call via x402 micropayments. Real Brave Search results, structured JSON.",
+                example: "POST /api/v1/search { \"q\": \"latest AI news\" }",
+                tag: "LIVE",
+              },
+              {
+                title: "Prediction Markets",
+                desc: "138 markets from Polymarket with price history. Trending, search, and detailed stats. No auth, no LLM, sub-200ms.",
+                example: "GET /api/v1/data/markets/trending?limit=5",
+                tag: "LIVE",
+              },
+              {
+                title: "Intelligent Routing",
+                desc: "Describe what you need in plain English. APIPOOL finds the best provider using 4-pillar intelligence scoring.",
+                example: "POST /api/v1/route { \"query\": \"crypto odds\" }",
+                tag: "LIVE",
+              },
+              {
+                title: "Add Your Own API",
+                desc: "Register your API endpoint. APIPOOL health-checks it, scores it, and routes agent traffic to you. Earn per request via x402.",
+                example: "POST /api/registry/register { ... }",
+                tag: "OPEN",
+              },
+            ].map((item, i) => (
+              <div key={i} className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] font-mono text-white/40 border border-white/10 px-1.5 py-0.5 rounded">{item.tag}</span>
+                  <h3 className="font-mono text-sm text-white">{item.title}</h3>
+                </div>
+                <p className="text-xs font-mono text-white/40 leading-relaxed mb-3">{item.desc}</p>
+                <code className="text-[10px] font-mono text-white/30 bg-black/20 px-2 py-1 rounded break-all">{item.example}</code>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Why Add Your API to APIPOOL */}
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-4">Why Add Your API to the Pool?</h2>
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
+            {[
+              {
+                title: "Earn Per Request",
+                desc: "Set your price. Agents pay you directly via x402 micropayments (USDC on Base). No middleman takes a cut. You get paid instantly for every call.",
+              },
+              {
+                title: "Free Distribution",
+                desc: "APIPOOL routes AI agents to you automatically. No marketing needed. Score high on quality and agents discover you through intelligent routing.",
+              },
+              {
+                title: "Zero Integration Work",
+                desc: "Keep your existing API. Just register it with APIPOOL. We handle discovery, quality scoring, health checks, and failover. You focus on your data.",
+              },
+            ].map((item, i) => (
+              <div key={i} className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+                <h3 className="font-mono text-sm text-white mb-2">{item.title}</h3>
+                <p className="text-xs font-mono text-white/40 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Monetization Framework */}
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-4">Monetization</h2>
+          <p className="text-xs font-mono text-white/40 mb-6 max-w-xl">
+            APIPOOL uses the x402 protocol (HTTP 402 + USDC on Base). Here&apos;s how money flows:
+          </p>
+
+          <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02] mb-6">
+            <div className="text-xs font-mono text-white/30 mb-4">HOW PROVIDERS EARN</div>
+            <div className="space-y-4 text-xs font-mono text-white/40 leading-relaxed">
+              <div className="flex gap-3">
+                <span className="text-white/20 shrink-0">1.</span>
+                <span>Register your API with a price per request (e.g., $0.005 USDC)</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-white/20 shrink-0">2.</span>
+                <span>Offer a free tier (e.g., 10 calls/day per IP) to let users try it</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-white/20 shrink-0">3.</span>
+                <span>When free tier is exhausted, your API returns HTTP 402 with payment details</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-white/20 shrink-0">4.</span>
+                <span>The agent (or its user) pays via @x402/fetch — USDC sent to your wallet on Base</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-white/20 shrink-0">5.</span>
+                <span>You receive payment instantly. No invoice. No account. No 30-day net.</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="border border-white/10 rounded-lg p-4">
+              <div className="text-xs font-mono text-white/30 mb-2">Example: Web Search</div>
+              <div className="text-[10px] font-mono text-white/40 space-y-1">
+                <div>Price: <span className="text-white/60">$0.005/request</span></div>
+                <div>Free tier: <span className="text-white/60">10/day</span></div>
+                <div>1K paid calls/day = <span className="text-white/60">$5/day</span></div>
+                <div>Monthly at scale = <span className="text-white/60">$150/mo</span></div>
+              </div>
+            </div>
+            <div className="border border-white/10 rounded-lg p-4">
+              <div className="text-xs font-mono text-white/30 mb-2">Example: Premium Data API</div>
+              <div className="text-[10px] font-mono text-white/40 space-y-1">
+                <div>Price: <span className="text-white/60">$0.01/request</span></div>
+                <div>Free tier: <span className="text-white/60">5/day</span></div>
+                <div>500 paid calls/day = <span className="text-white/60">$5/day</span></div>
+                <div>Monthly at scale = <span className="text-white/60">$150/mo</span></div>
+              </div>
+            </div>
+            <div className="border border-white/10 rounded-lg p-4">
+              <div className="text-xs font-mono text-white/30 mb-2">APIPOOL Revenue</div>
+              <div className="text-[10px] font-mono text-white/40 space-y-1">
+                <div>Currently: <span className="text-white/60">free for all</span></div>
+                <div>Future: <span className="text-white/60">small % of x402 payments</span></div>
+                <div>Or: <span className="text-white/60">premium placement fees</span></div>
+                <div>Philosophy: <span className="text-white/60">grow first, monetize later</span></div>
               </div>
             </div>
           </div>
@@ -87,24 +207,24 @@ export default function AboutPage() {
               },
               {
                 title: "Research Agent",
-                desc: "A Claude-powered research agent needs to answer complex questions. It queries APIPOOL for 'research' capability and gets routed to the highest-quality research provider. If the primary provider's Mac Mini goes offline, the agent gets a fallback automatically.",
-                tags: ["research", "analysis", "summarization"],
+                desc: "A Claude-powered research agent needs to answer complex questions. It queries APIPOOL for 'web-search' capability and gets Brave Search results. 10 free queries/day, then micropayments via x402.",
+                tags: ["web-search", "research", "analysis"],
               },
               {
-                title: "Trading Bot",
-                desc: "A DeFi trading bot needs market intelligence before executing trades. It queries APIPOOL for market analysis, gets prediction market consensus data (no LLM latency), and uses it as a signal alongside on-chain data.",
-                tags: ["market-analysis", "arbitrage", "crypto"],
+                title: "Vibe Coder App",
+                desc: "Building in Cursor or Replit? Need live data but don't want to learn APIs? One POST to /api/v1/route with what you need in plain English. APIPOOL figures out the rest.",
+                tags: ["beginner-friendly", "one-line", "any-data"],
               },
               {
                 title: "Multi-Agent System",
-                desc: "A coordinator agent orchestrates 5 specialist agents. Each specialist discovers its required APIs through APIPOOL instead of being manually configured. New capabilities can be added to the marketplace without touching agent code.",
+                desc: "A coordinator agent orchestrates specialist agents. Each discovers its APIs through APIPOOL instead of being manually configured. New capabilities added to the marketplace without touching agent code.",
                 tags: ["A2A", "multi-agent", "discovery"],
               },
             ].map((uc, i) => (
-              <div key={i} className="border border-white/10 rounded-lg p-6 bg-white/[0.02]">
+              <div key={i} className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
                 <h3 className="font-mono text-sm text-white mb-2">{uc.title}</h3>
                 <p className="text-xs font-mono text-white/40 leading-relaxed mb-3">{uc.desc}</p>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {uc.tags.map(tag => (
                     <span key={tag} className="text-[10px] font-mono text-white/20 border border-white/5 px-2 py-0.5 rounded">
                       {tag}

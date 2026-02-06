@@ -317,6 +317,10 @@ const CAPABILITY_MAP: Record<string, string[]> = {
     'news', 'latest', 'update', 'current', 'today', 'headline',
     'breaking', 'recent', 'event',
   ],
+  'web-search': [
+    'search', 'google', 'find', 'look up', 'lookup', 'browse',
+    'web', 'internet', 'query', 'information', 'answer',
+  ],
 };
 
 export interface ParsedQuery {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Nav } from "@/components/Nav";
 
 export default function Home() {
   return (
@@ -8,10 +9,6 @@ export default function Home() {
         @keyframes float {
           0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.03; }
           50% { transform: translateY(-20px) rotate(1deg); opacity: 0.07; }
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.02; }
-          50% { opacity: 0.05; }
         }
         @keyframes scan {
           0% { transform: translateY(-100%); }
@@ -44,107 +41,161 @@ export default function Home() {
         <div className="float-3 absolute top-[15%] left-[50%] text-[60px] font-mono text-white opacity-[0.03] select-none">1</div>
       </div>
 
-      {/* Nav */}
-      <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</span>
-            <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">v1</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <a href="#how" className="text-xs text-white/40 hover:text-white transition-colors font-mono">how</a>
-            <a href="#api" className="text-xs text-white/40 hover:text-white transition-colors font-mono">api</a>
-            <Link href="/about" className="text-xs text-white/40 hover:text-white transition-colors font-mono">about</Link>
-            <Link href="/methodology" className="text-xs text-white/40 hover:text-white transition-colors font-mono">methodology</Link>
-            <Link href="/explore">
-              <span className="text-xs text-black bg-white hover:bg-white/80 px-3 py-1.5 rounded font-mono transition-colors">
-                explore
-              </span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Nav />
 
       <main className="pt-14 relative z-10">
-        {/* HERO */}
-        <section className="max-w-5xl mx-auto px-4 py-24 text-center">
-          <h1 className="text-5xl md:text-7xl font-mono font-bold text-white tracking-tight mb-6">
-            APIPOOL
-          </h1>
-          <p className="text-lg text-white/60 font-mono mb-3 max-w-2xl mx-auto">
-            The API marketplace for AI agents.
-          </p>
-          <p className="text-sm text-white/30 font-mono mb-10 max-w-xl mx-auto leading-relaxed">
-            Agents query by capability. We route to the best provider.
-            No hardcoded endpoints. No guessing. Just structured intelligence.
-          </p>
+        {/* HERO — "One Smart API" */}
+        <section className="max-w-5xl mx-auto px-4 py-16 md:py-24">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-7xl font-mono font-bold text-white tracking-tight mb-6">
+              One Smart API.
+            </h1>
+            <p className="text-base md:text-lg text-white/60 font-mono mb-3 max-w-2xl mx-auto">
+              Describe what data your app needs. Get it back in JSON.
+            </p>
+            <p className="text-xs md:text-sm text-white/30 font-mono mb-10 max-w-xl mx-auto leading-relaxed">
+              No API keys. No docs to read. No endpoints to memorize.
+              APIPOOL finds the best provider, routes your request, and handles failover.
+              One line of code.
+            </p>
 
-          <div className="flex gap-3 justify-center">
-            <Link href="/explore">
-              <span className="inline-block px-6 py-2.5 bg-white text-black font-mono text-sm rounded hover:bg-white/90 transition-colors">
-                browse apis
-              </span>
-            </Link>
-            <Link href="/register">
-              <span className="inline-block px-6 py-2.5 border border-white/20 text-white/70 font-mono text-sm rounded hover:border-white/40 hover:text-white transition-colors">
-                list your api
-              </span>
-            </Link>
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Link href="/explore">
+                <span className="inline-block px-6 py-2.5 bg-white text-black font-mono text-sm rounded hover:bg-white/90 transition-colors">
+                  try it now
+                </span>
+              </Link>
+              <Link href="/register">
+                <span className="inline-block px-6 py-2.5 border border-white/20 text-white/70 font-mono text-sm rounded hover:border-white/40 hover:text-white transition-colors">
+                  list your api
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          {/* THE CODE EXAMPLE — this is the hook */}
+          <div className="max-w-2xl mx-auto border border-white/10 rounded-lg overflow-hidden bg-white/[0.02]">
+            <div className="px-4 py-2 border-b border-white/5 flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+              </div>
+              <span className="text-[10px] font-mono text-white/20 ml-2">your-app.js</span>
+            </div>
+            <pre className="p-4 md:p-6 text-xs md:text-sm font-mono text-white/50 overflow-x-auto leading-relaxed">
+{`// You need data. You don't know which API.
+// APIPOOL handles it.
+
+const res = await fetch(
+  "https://agent-gateway-zeta.vercel.app/api/v1/route",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: "trending crypto prediction markets"
+    })
+  }
+);
+
+const { data } = await res.json();
+// → best provider, quality score, fallbacks
+// → agent calls provider directly`}</pre>
           </div>
 
           {/* Live stats */}
-          <div className="mt-16 flex justify-center gap-12 text-center">
+          <div className="mt-12 grid grid-cols-2 md:flex md:justify-center gap-6 md:gap-12 text-center">
             <div>
-              <div className="text-2xl font-mono font-bold text-white">60+</div>
-              <div className="text-xs font-mono text-white/30">markets tracked</div>
+              <div className="text-xl md:text-2xl font-mono font-bold text-white">138+</div>
+              <div className="text-[10px] md:text-xs font-mono text-white/30">markets tracked</div>
             </div>
             <div>
-              <div className="text-2xl font-mono font-bold text-white">$12.5M</div>
-              <div className="text-xs font-mono text-white/30">volume indexed</div>
+              <div className="text-xl md:text-2xl font-mono font-bold text-white">$17M+</div>
+              <div className="text-[10px] md:text-xs font-mono text-white/30">volume indexed</div>
             </div>
             <div>
-              <div className="text-2xl font-mono font-bold text-white">&lt;200ms</div>
-              <div className="text-xs font-mono text-white/30">avg response</div>
+              <div className="text-xl md:text-2xl font-mono font-bold text-white">&lt;200ms</div>
+              <div className="text-[10px] md:text-xs font-mono text-white/30">avg response</div>
             </div>
             <div>
-              <div className="text-2xl font-mono font-bold text-white">0</div>
-              <div className="text-xs font-mono text-white/30">LLMs in the loop</div>
+              <div className="text-xl md:text-2xl font-mono font-bold text-white">0</div>
+              <div className="text-[10px] md:text-xs font-mono text-white/30">LLMs in the loop</div>
             </div>
           </div>
         </section>
 
-        {/* INTELLIGENT ROUTING — THE METHODOLOGY */}
-        <section id="how" className="border-t border-white/5">
-          <div className="max-w-5xl mx-auto px-4 py-20">
-            <h2 className="text-2xl font-mono font-bold text-white mb-3">Intelligent Routing</h2>
-            <p className="text-sm text-white/40 font-mono mb-12 max-w-2xl">
-              How agents find the right API without hardcoding anything. This is a real, deployed system — not a concept.
+        {/* WHO IS THIS FOR */}
+        <section className="border-t border-white/5 bg-white/[0.01]">
+          <div className="max-w-5xl mx-auto px-4 py-16 md:py-20">
+            <h2 className="text-xl md:text-2xl font-mono font-bold text-white mb-3">Who is this for?</h2>
+            <p className="text-xs md:text-sm text-white/40 font-mono mb-10 max-w-2xl">
+              If you build apps that need data, APIPOOL saves you the work of finding, integrating, and maintaining API connections.
             </p>
 
-            {/* The flow */}
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02]">
-                <div className="text-xs font-mono text-white/30 mb-4">STEP 1 — QUERY</div>
-                <p className="text-sm font-mono text-white/70 leading-relaxed mb-4">
-                  Agent sends a capability request. Not a URL. Not an API name. Just what it needs.
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                {
+                  title: "Vibe Coders",
+                  desc: "Building in Cursor, Replit, or Lovable? You need live data but don't want to read API docs. Describe what you need — APIPOOL returns it.",
+                  tag: "beginners",
+                },
+                {
+                  title: "AI Agent Builders",
+                  desc: "Using LangChain, CrewAI, or custom agents? Let your agent discover APIs at runtime instead of hardcoding endpoints. Dynamic tool access.",
+                  tag: "agents",
+                },
+                {
+                  title: "Indie Hackers",
+                  desc: "Shipping fast? One endpoint for prediction markets, web search, market data, and more. Add real data to your app in minutes, not days.",
+                  tag: "builders",
+                },
+              ].map((item) => (
+                <div key={item.tag} className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] font-mono text-white/20 border border-white/10 px-1.5 py-0.5 rounded">
+                      {item.tag}
+                    </span>
+                    <span className="text-sm font-mono text-white">{item.title}</span>
+                  </div>
+                  <p className="text-xs font-mono text-white/40 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* HOW IT WORKS — INTELLIGENT ROUTING */}
+        <section id="how" className="border-t border-white/5">
+          <div className="max-w-5xl mx-auto px-4 py-16 md:py-20">
+            <h2 className="text-xl md:text-2xl font-mono font-bold text-white mb-3">How It Works</h2>
+            <p className="text-xs md:text-sm text-white/40 font-mono mb-12 max-w-2xl">
+              Not a dumb catalog. APIPOOL scores, ranks, and routes — with a self-learning intelligence layer that improves from every request.
+            </p>
+
+            {/* The 3-step flow */}
+            <div className="grid md:grid-cols-3 gap-4 md:gap-6 mb-12">
+              <div className="border border-white/10 rounded-lg p-5 md:p-6 bg-white/[0.02]">
+                <div className="text-xs font-mono text-white/30 mb-4">1 — QUERY</div>
+                <p className="text-xs md:text-sm font-mono text-white/70 leading-relaxed mb-4">
+                  Send what you need. Not a URL. Not an API name. Just describe it.
                 </p>
-                <pre className="text-xs font-mono text-white/50 bg-black/30 rounded p-3 overflow-x-auto">
+                <pre className="text-[10px] md:text-xs font-mono text-white/50 bg-black/30 rounded p-3 overflow-x-auto">
 {`POST /api/v1/route
 
-// exact match:
-{ "capability": "market-data" }
+// natural language:
+{ "query": "crypto prices" }
 
-// or natural language:
-{ "query": "crypto prices" }`}
+// or exact match:
+{ "capability": "market-data" }`}
                 </pre>
               </div>
 
-              <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02]">
-                <div className="text-xs font-mono text-white/30 mb-4">STEP 2 — SCORE</div>
-                <p className="text-sm font-mono text-white/70 leading-relaxed mb-4">
-                  Gateway scores all providers matching that capability. Ranking formula:
+              <div className="border border-white/10 rounded-lg p-5 md:p-6 bg-white/[0.02]">
+                <div className="text-xs font-mono text-white/30 mb-4">2 — SCORE</div>
+                <p className="text-xs md:text-sm font-mono text-white/70 leading-relaxed mb-4">
+                  All matching providers scored in real-time with 4-pillar intelligence:
                 </p>
-                <div className="space-y-2 text-xs font-mono">
+                <div className="space-y-2 text-[10px] md:text-xs font-mono">
                   <div className="flex justify-between text-white/50">
                     <span>uptime</span>
                     <span className="text-white/70">40%</span>
@@ -161,23 +212,19 @@ export default function Home() {
                   </div>
                   <div className="w-full h-1 bg-white/5 rounded"><div className="h-full bg-white/20 rounded" style={{width:'30%'}}/></div>
                 </div>
-                <p className="text-xs font-mono text-white/30 mt-4">
-                  Daily health checks update scores automatically.
-                </p>
               </div>
 
-              <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02]">
-                <div className="text-xs font-mono text-white/30 mb-4">STEP 3 — ROUTE</div>
-                <p className="text-sm font-mono text-white/70 leading-relaxed mb-4">
-                  Agent gets the best endpoint + fallbacks. Calls provider directly. Gateway is not a proxy.
+              <div className="border border-white/10 rounded-lg p-5 md:p-6 bg-white/[0.02]">
+                <div className="text-xs font-mono text-white/30 mb-4">3 — ROUTE</div>
+                <p className="text-xs md:text-sm font-mono text-white/70 leading-relaxed mb-4">
+                  Get the best endpoint + fallbacks. Call provider directly. APIPOOL is a router, not a proxy.
                 </p>
-                <pre className="text-xs font-mono text-white/50 bg-black/30 rounded p-3 overflow-x-auto">
+                <pre className="text-[10px] md:text-xs font-mono text-white/50 bg-black/30 rounded p-3 overflow-x-auto">
 {`{
   "provider": {
     "name": "Polymarket Data",
-    "endpoint": "https://...markets",
-    "quality_score": 4.9,
-    "latency_ms": 180
+    "endpoint": "https://...",
+    "quality_score": 4.9
   },
   "fallbacks": [...]
 }`}
@@ -185,26 +232,26 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Visual flow */}
-            <div className="border border-white/10 rounded-lg p-8 bg-white/[0.02]">
-              <div className="flex items-center justify-center gap-6 flex-wrap">
-                <div className="border border-white/20 rounded px-6 py-3 text-center">
-                  <div className="font-mono text-sm text-white">AGENT</div>
-                  <div className="text-[10px] font-mono text-white/30 mt-1">&quot;I need market data&quot;</div>
+            {/* Visual flow — responsive */}
+            <div className="border border-white/10 rounded-lg p-4 md:p-8 bg-white/[0.02]">
+              <div className="flex items-center justify-center gap-3 md:gap-6 flex-wrap">
+                <div className="border border-white/20 rounded px-4 md:px-6 py-2 md:py-3 text-center">
+                  <div className="font-mono text-xs md:text-sm text-white">YOUR APP</div>
+                  <div className="text-[9px] md:text-[10px] font-mono text-white/30 mt-1">&quot;I need market data&quot;</div>
                 </div>
-                <div className="text-white/20 font-mono">{"--->"}</div>
-                <div className="border border-white/40 rounded px-6 py-3 text-center bg-white/[0.03]">
-                  <div className="font-mono text-sm text-white font-bold">APIPOOL</div>
-                  <div className="text-[10px] font-mono text-white/30 mt-1">scores + routes</div>
+                <div className="text-white/20 font-mono text-xs md:text-base">{"--->"}</div>
+                <div className="border border-white/40 rounded px-4 md:px-6 py-2 md:py-3 text-center bg-white/[0.03]">
+                  <div className="font-mono text-xs md:text-sm text-white font-bold">APIPOOL</div>
+                  <div className="text-[9px] md:text-[10px] font-mono text-white/30 mt-1">scores + routes</div>
                 </div>
-                <div className="text-white/20 font-mono">{"--->"}</div>
-                <div className="border border-white/20 rounded px-6 py-3 text-center">
-                  <div className="font-mono text-sm text-white">PROVIDER</div>
-                  <div className="text-[10px] font-mono text-white/30 mt-1">returns data</div>
+                <div className="text-white/20 font-mono text-xs md:text-base">{"--->"}</div>
+                <div className="border border-white/20 rounded px-4 md:px-6 py-2 md:py-3 text-center">
+                  <div className="font-mono text-xs md:text-sm text-white">PROVIDER</div>
+                  <div className="text-[9px] md:text-[10px] font-mono text-white/30 mt-1">returns JSON</div>
                 </div>
               </div>
-              <div className="text-center mt-4 text-[10px] font-mono text-white/20">
-                agent calls provider directly — APIPOOL is a router, not a proxy
+              <div className="text-center mt-4 text-[9px] md:text-[10px] font-mono text-white/20">
+                your app calls provider directly — APIPOOL is a router, not a proxy
               </div>
             </div>
 
@@ -215,23 +262,23 @@ export default function Home() {
                 {[
                   {
                     id: "P1",
-                    name: "Self-Learning Routing",
-                    desc: "Scores adapt from real routing outcomes. Providers that consistently deliver get boosted (1.2x). Unreliable ones get penalized (0.8x).",
+                    name: "Self-Learning",
+                    desc: "Every routing decision is recorded. Providers that deliver get boosted (1.2x). Unreliable ones get penalized (0.8x). The system gets smarter with every request.",
                   },
                   {
                     id: "P2",
                     name: "Predictive Orchestration",
-                    desc: "Health trends analyzed in real-time. Providers showing degradation are demoted BEFORE they fail. No agent downtime.",
+                    desc: "If latency is trending up or success rate dropping, the provider is demoted BEFORE it fails. No agent downtime. No manual intervention.",
                   },
                   {
                     id: "P3",
                     name: "Anomaly Detection",
-                    desc: "Latency spikes, error bursts, downtime events are detected by comparing recent checks against baseline. Anomalies reduce scores immediately.",
+                    desc: "Latency spikes, error bursts, and downtime are detected by comparing recent checks against baseline. Anomalies reduce scores immediately.",
                   },
                   {
                     id: "P4",
-                    name: "Contextual Understanding",
-                    desc: "Agents send natural language queries. APIPOOL parses them into capabilities. No LLM needed — keyword extraction + capability mapping.",
+                    name: "Natural Language",
+                    desc: "Don't know the capability name? Just describe what you need: \"crypto prediction odds\" resolves to prediction-markets. No LLM needed.",
                   },
                 ].map(p => (
                   <div key={p.id} className="border border-white/10 rounded-lg p-4 bg-white/[0.01]">
@@ -239,7 +286,7 @@ export default function Home() {
                       <span className="text-[10px] font-mono text-white/20 border border-white/10 px-1.5 py-0.5 rounded">{p.id}</span>
                       <span className="text-xs font-mono text-white">{p.name}</span>
                     </div>
-                    <p className="text-[10px] font-mono text-white/30 leading-relaxed">{p.desc}</p>
+                    <p className="text-[10px] md:text-xs font-mono text-white/30 leading-relaxed">{p.desc}</p>
                   </div>
                 ))}
               </div>
@@ -254,11 +301,12 @@ export default function Home() {
 
         {/* API REFERENCE */}
         <section id="api" className="border-t border-white/5 bg-white/[0.01]">
-          <div className="max-w-5xl mx-auto px-4 py-20">
-            <h2 className="text-2xl font-mono font-bold text-white mb-3">API Reference</h2>
-            <p className="text-sm text-white/40 font-mono mb-10">Every endpoint. No auth needed for reads.</p>
+          <div className="max-w-5xl mx-auto px-4 py-16 md:py-20">
+            <h2 className="text-xl md:text-2xl font-mono font-bold text-white mb-3">API Reference</h2>
+            <p className="text-xs md:text-sm text-white/40 font-mono mb-10">Every endpoint. No auth needed for reads.</p>
 
-            <div className="border border-white/10 rounded-lg overflow-hidden">
+            {/* Mobile: card layout. Desktop: table */}
+            <div className="hidden md:block border border-white/10 rounded-lg overflow-hidden">
               <table className="w-full text-sm font-mono">
                 <thead>
                   <tr className="border-b border-white/10">
@@ -279,8 +327,8 @@ export default function Home() {
                     { method: "GET", endpoint: "/api/v1/data/markets/search?q=", desc: "Search prediction markets" },
                     { method: "GET", endpoint: "/api/v1/data/markets/{slug}", desc: "Market detail + price history" },
                     { method: "GET", endpoint: "/api/v1/data/markets/stats", desc: "Market stats overview" },
-                    { method: "GET", endpoint: "/api/v1/intelligence", desc: "Intelligence system status + provider predictions", highlight: true },
-                    { method: "POST", endpoint: "/api/v1/intelligence", desc: "Test contextual understanding (NL → capability)" },
+                    { method: "GET", endpoint: "/api/v1/intelligence", desc: "Intelligence system status + predictions", highlight: true },
+                    { method: "POST", endpoint: "/api/v1/intelligence", desc: "Test NL understanding (query → capability)" },
                   ].map((ep, i) => (
                     <tr key={i} className={`border-b border-white/5 last:border-0 ${ep.highlight ? 'bg-white/[0.02]' : ''}`}>
                       <td className="p-4">
@@ -295,46 +343,80 @@ export default function Home() {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile: stacked cards */}
+            <div className="md:hidden space-y-2">
+              {[
+                { method: "POST", endpoint: "/api/v1/route", desc: "Intelligent routing", highlight: true },
+                { method: "POST", endpoint: "/api/v1/search", desc: "Web search (10 free/day)", highlight: true },
+                { method: "GET", endpoint: "/api/v1/data/markets/trending", desc: "Trending markets", highlight: true },
+                { method: "GET", endpoint: "/api/v1/data/markets/search?q=", desc: "Search markets" },
+                { method: "GET", endpoint: "/api/v1/registry", desc: "Browse APIs" },
+                { method: "GET", endpoint: "/api/v1/capabilities", desc: "List capabilities" },
+                { method: "GET", endpoint: "/api/v1/intelligence", desc: "Intelligence status", highlight: true },
+                { method: "GET", endpoint: "/api/v1/health-check", desc: "Provider health" },
+                { method: "GET", endpoint: "/api/v1/data/markets/{slug}", desc: "Market detail" },
+                { method: "GET", endpoint: "/api/v1/data/markets/stats", desc: "Market stats" },
+              ].map((ep, i) => (
+                <div key={i} className={`border border-white/10 rounded p-3 ${ep.highlight ? 'bg-white/[0.02]' : ''}`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[10px] font-mono ${ep.method === 'POST' ? 'text-white/60' : 'text-white/30'}`}>
+                      {ep.method}
+                    </span>
+                    <span className="text-xs font-mono text-white/70 truncate">{ep.endpoint}</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-white/30">{ep.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link href="/docs" className="text-xs font-mono text-white/30 hover:text-white/60 transition-colors">
+                full documentation →
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* FEATURED API */}
+        {/* FEATURED PROVIDER */}
         <section id="featured" className="border-t border-white/5">
-          <div className="max-w-5xl mx-auto px-4 py-20">
-            <div className="flex items-center gap-3 mb-3">
-              <h2 className="text-2xl font-mono font-bold text-white">Featured Provider</h2>
+          <div className="max-w-5xl mx-auto px-4 py-16 md:py-20">
+            <div className="flex items-center gap-3 mb-3 flex-wrap">
+              <h2 className="text-xl md:text-2xl font-mono font-bold text-white">Featured Provider</h2>
               <span className="text-[10px] font-mono text-white/40 border border-white/10 px-1.5 py-0.5 rounded">LIVE</span>
             </div>
-            <p className="text-sm text-white/30 font-mono mb-10">
+            <p className="text-xs md:text-sm text-white/30 font-mono mb-10">
               Reference listing. This is what a well-structured provider looks like on APIPOOL.
             </p>
 
             <div className="border border-white/10 rounded-lg overflow-hidden">
               {/* Header */}
-              <div className="border-b border-white/10 px-6 py-5 flex items-center justify-between bg-white/[0.02]">
-                <div>
-                  <h3 className="font-mono font-bold text-white text-lg">Polymarket Historical Data API</h3>
-                  <div className="flex items-center gap-3 mt-1 text-xs font-mono text-white/30">
-                    <span>market-data</span>
-                    <span className="text-white/10">|</span>
-                    <span>by Rufus #22742</span>
-                    <span className="text-white/10">|</span>
-                    <span className="text-white/50">FREE</span>
+              <div className="border-b border-white/10 px-4 md:px-6 py-4 md:py-5 bg-white/[0.02]">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                  <div>
+                    <h3 className="font-mono font-bold text-white text-base md:text-lg">Polymarket Historical Data API</h3>
+                    <div className="flex items-center gap-3 mt-1 text-xs font-mono text-white/30 flex-wrap">
+                      <span>market-data</span>
+                      <span className="text-white/10">|</span>
+                      <span>by Rufus #22742</span>
+                      <span className="text-white/10">|</span>
+                      <span className="text-white/50">FREE</span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  {["ERC-8004", "A2A", "No LLM"].map(tag => (
-                    <span key={tag} className="text-[10px] font-mono text-white/40 border border-white/10 px-2 py-1 rounded">
-                      {tag}
-                    </span>
-                  ))}
+                  <div className="flex gap-2 flex-wrap">
+                    {["ERC-8004", "A2A", "No LLM"].map(tag => (
+                      <span key={tag} className="text-[10px] font-mono text-white/40 border border-white/10 px-2 py-1 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Body */}
-              <div className="px-6 py-6">
-                <p className="text-sm text-white/60 font-mono leading-relaxed mb-6">
-                  60+ prediction markets with price history. Pure structured data from PostgreSQL.
+              <div className="px-4 md:px-6 py-5 md:py-6">
+                <p className="text-xs md:text-sm text-white/60 font-mono leading-relaxed mb-6">
+                  138 prediction markets with price history. Pure structured data from PostgreSQL.
                   No LLM, no external dependencies, no API keys. Synced daily from Polymarket Gamma API.
                 </p>
 
@@ -346,17 +428,16 @@ export default function Home() {
                   ))}
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-3 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                   {[
-                    { name: "Trending", path: "GET /api/v1/data/markets/trending", info: "Top markets by volume" },
-                    { name: "Search", path: "GET /api/v1/data/markets/search?q=", info: "Full-text search" },
-                    { name: "Detail", path: "GET /api/v1/data/markets/{slug}", info: "Market + price history" },
-                    { name: "Stats", path: "GET /api/v1/data/markets/stats", info: "Volume, categories, sync time" },
+                    { name: "Trending", path: "/markets/trending" },
+                    { name: "Search", path: "/markets/search?q=" },
+                    { name: "Detail", path: "/markets/{slug}" },
+                    { name: "Stats", path: "/markets/stats" },
                   ].map(ep => (
-                    <div key={ep.name} className="border border-white/5 rounded p-3 bg-white/[0.01]">
+                    <div key={ep.name} className="border border-white/5 rounded p-2 md:p-3 bg-white/[0.01]">
                       <div className="text-[10px] font-mono text-white/30 mb-1">{ep.name}</div>
-                      <code className="text-xs font-mono text-white/50">{ep.path}</code>
-                      <div className="text-[10px] font-mono text-white/20 mt-1">{ep.info}</div>
+                      <code className="text-[10px] md:text-xs font-mono text-white/50 break-all">{ep.path}</code>
                     </div>
                   ))}
                 </div>
@@ -366,22 +447,20 @@ export default function Home() {
                   <div className="px-4 py-2 border-b border-white/5 bg-white/[0.02]">
                     <span className="text-[10px] font-mono text-white/30">try it — no auth required</span>
                   </div>
-                  <pre className="p-4 text-xs font-mono text-white/40 overflow-x-auto">
+                  <pre className="p-3 md:p-4 text-[10px] md:text-xs font-mono text-white/40 overflow-x-auto">
 {`curl https://agent-gateway-zeta.vercel.app/api/v1/data/markets/trending?limit=3`}
                   </pre>
                 </div>
               </div>
 
               {/* Why it scores high */}
-              <div className="border-t border-white/5 px-6 py-4 bg-white/[0.01]">
-                <div className="text-[10px] font-mono text-white/20 mb-2">Why this scores high on APIPOOL:</div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-mono text-white/30">
+              <div className="border-t border-white/5 px-4 md:px-6 py-3 md:py-4 bg-white/[0.01]">
+                <div className="text-[10px] font-mono text-white/20 mb-2">Why this scores high:</div>
+                <div className="flex flex-wrap gap-x-3 md:gap-x-4 gap-y-1 text-[10px] font-mono text-white/30">
                   <span>+ structured JSON</span>
                   <span>+ no auth for reads</span>
-                  <span>+ {`{success, data, meta}`} format</span>
-                  <span>+ sub-200ms latency</span>
+                  <span>+ sub-200ms</span>
                   <span>+ multiple query patterns</span>
-                  <span>+ clear capability tags</span>
                   <span>+ on-chain identity</span>
                   <span>+ no LLM = always available</span>
                 </div>
@@ -392,20 +471,17 @@ export default function Home() {
 
         {/* BEST PRACTICES */}
         <section className="border-t border-white/5 bg-white/[0.01]">
-          <div className="max-w-5xl mx-auto px-4 py-20">
-            <h2 className="text-2xl font-mono font-bold text-white mb-3">Provider Best Practices</h2>
-            <p className="text-sm text-white/30 font-mono mb-10">Follow these to rank higher and get more agent traffic.</p>
+          <div className="max-w-5xl mx-auto px-4 py-16 md:py-20">
+            <h2 className="text-xl md:text-2xl font-mono font-bold text-white mb-3">Provider Best Practices</h2>
+            <p className="text-xs md:text-sm text-white/30 font-mono mb-10">Follow these to rank higher and get more agent traffic.</p>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="border border-white/10 rounded-lg p-6">
+              <div className="border border-white/10 rounded-lg p-5 md:p-6">
                 <h3 className="font-mono text-sm text-white mb-4">Response Format</h3>
-                <pre className="text-xs font-mono text-white/40 bg-black/30 rounded p-4 overflow-x-auto mb-4">
-{`// Every response should follow this shape:
-{
+                <pre className="text-[10px] md:text-xs font-mono text-white/40 bg-black/30 rounded p-3 md:p-4 overflow-x-auto mb-4">
+{`{
   "success": true,
-  "data": {
-    // your payload here
-  },
+  "data": { /* your payload */ },
   "meta": {
     "source": "your-service",
     "timestamp": "2026-02-06T..."
@@ -417,26 +493,25 @@ export default function Home() {
   "success": false,
   "error": {
     "code": "NOT_FOUND",
-    "message": "Human-readable message"
+    "message": "Human-readable"
   }
 }`}
                 </pre>
-                <p className="text-[10px] font-mono text-white/20">Agents parse JSON. Consistent structure = fewer integration bugs.</p>
+                <p className="text-[10px] font-mono text-white/20">Consistent structure = fewer integration bugs.</p>
               </div>
 
-              <div className="border border-white/10 rounded-lg p-6">
+              <div className="border border-white/10 rounded-lg p-5 md:p-6">
                 <h3 className="font-mono text-sm text-white mb-4">Checklist</h3>
-                <div className="space-y-3 text-xs font-mono">
+                <div className="space-y-2 md:space-y-3 text-[10px] md:text-xs font-mono">
                   {[
                     "HTTPS only",
                     "Latency under 2 seconds",
                     "Expose /health endpoint",
                     "Descriptive capability tags",
-                    "A2A agent card at /.well-known/agent-card.json",
-                    "No auth required for read endpoints",
+                    "A2A agent card",
+                    "No auth for read endpoints",
                     "Return JSON, never HTML",
-                    "Handle errors with {success: false, error: {...}}",
-                    "Use x402 for paid endpoints — free tier + micropayments",
+                    "x402 for paid endpoints",
                   ].map((item, i) => (
                     <div key={i} className="flex gap-2 text-white/40">
                       <span className="text-white/20">+</span>
@@ -444,34 +519,24 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 pt-4 border-t border-white/5">
-                  <div className="text-[10px] font-mono text-white/20 mb-2">Avoid:</div>
-                  <div className="space-y-1 text-xs font-mono text-white/20">
-                    <div>- Returning unstructured text or HTML</div>
-                    <div>- Complex auth for basic reads</div>
-                    <div>- Inconsistent response shapes</div>
-                    <div>- LLM dependency for simple data lookups</div>
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* x402 Payment Best Practice */}
-            <div className="mt-6 border border-white/10 rounded-lg p-6">
-              <h3 className="font-mono text-sm text-white mb-4">x402 Payments — The Standard for Paid APIs</h3>
+            {/* x402 */}
+            <div className="mt-6 border border-white/10 rounded-lg p-5 md:p-6">
+              <h3 className="font-mono text-sm text-white mb-4">x402 Payments</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <p className="text-xs font-mono text-white/40 leading-relaxed mb-4">
-                    If your API has a cost, use the x402 protocol. Agents pay per-call with USDC on Base
-                    — no API keys, no accounts, no subscriptions. The HTTP 402 status code was designed for this.
+                    If your API has a cost, use x402. Agents pay per-call with USDC on Base
+                    — no API keys, no accounts. HTTP 402 was designed for this.
                   </p>
-                  <div className="space-y-2 text-xs font-mono">
+                  <div className="space-y-2 text-[10px] md:text-xs font-mono">
                     {[
-                      "Offer a free tier (e.g., 10 calls/day per IP)",
-                      "Return HTTP 402 with payment requirements when free tier exhausted",
-                      "Accept payment via X-PAYMENT header",
-                      "Use USDC on Base for lowest fees",
-                      "Include pricing in your agent-card.json",
+                      "Free tier (e.g., 10 calls/day)",
+                      "HTTP 402 when exhausted",
+                      "X-PAYMENT header for payment",
+                      "USDC on Base for lowest fees",
                     ].map((item, i) => (
                       <div key={i} className="flex gap-2 text-white/40">
                         <span className="text-white/20">+</span>
@@ -481,10 +546,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div>
-                  <pre className="text-xs font-mono text-white/40 bg-black/30 rounded p-4 overflow-x-auto">
-{`// When free tier is exhausted:
-// Return HTTP 402 with payment info
-
+                  <pre className="text-[10px] md:text-xs font-mono text-white/40 bg-black/30 rounded p-3 md:p-4 overflow-x-auto">
+{`// Free tier exhausted → HTTP 402
 {
   "error": {
     "code": "PAYMENT_REQUIRED",
@@ -495,17 +558,14 @@ export default function Home() {
       "asset": "USDC"
     }
   }
-}
-
-// Agent pays via @x402/fetch
-// and retries with X-PAYMENT header`}
+}`}
                   </pre>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-white/5 flex gap-4 text-[10px] font-mono text-white/20">
+              <div className="mt-4 pt-3 border-t border-white/5 flex gap-4 text-[10px] font-mono text-white/20 flex-wrap">
                 <a href="https://www.x402.org" className="hover:text-white/40 transition-colors">x402.org</a>
                 <a href="https://docs.cdp.coinbase.com/x402/welcome" className="hover:text-white/40 transition-colors">docs</a>
-                <span>npm: @x402/fetch (client) · x402-next (server)</span>
+                <span>npm: @x402/fetch</span>
               </div>
             </div>
           </div>
@@ -513,10 +573,10 @@ export default function Home() {
 
         {/* CTA */}
         <section className="border-t border-white/5">
-          <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-            <h2 className="text-3xl font-mono font-bold text-white mb-4">List your API</h2>
-            <p className="text-sm text-white/30 font-mono mb-8 max-w-lg mx-auto">
-              Register your API, follow the best practices, maintain uptime.
+          <div className="max-w-5xl mx-auto px-4 py-16 md:py-20 text-center">
+            <h2 className="text-2xl md:text-3xl font-mono font-bold text-white mb-4">List your API</h2>
+            <p className="text-xs md:text-sm text-white/30 font-mono mb-8 max-w-lg mx-auto">
+              Register your API. Maintain uptime.
               APIPOOL routes agents to you automatically.
             </p>
             <Link href="/register">
@@ -528,10 +588,10 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-white/5 py-8">
+        <footer className="border-t border-white/5 py-6 md:py-8">
           <div className="max-w-5xl mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4 font-mono text-xs text-white/20">
+              <div className="flex items-center gap-4 font-mono text-xs text-white/20 flex-wrap justify-center">
                 <span className="text-white/40 font-bold">APIPOOL</span>
                 <span className="text-white/5">|</span>
                 <a href="https://8004scan.io/agents/ethereum/22742" className="hover:text-white/40 transition-colors">
@@ -540,7 +600,7 @@ export default function Home() {
                 <span className="text-white/5">|</span>
                 <span>Built by Rufus</span>
               </div>
-              <div className="flex gap-6 font-mono text-xs text-white/20">
+              <div className="flex gap-4 md:gap-6 font-mono text-xs text-white/20 flex-wrap justify-center">
                 <Link href="/about" className="hover:text-white/40 transition-colors">about</Link>
                 <Link href="/methodology" className="hover:text-white/40 transition-colors">methodology</Link>
                 <Link href="/docs" className="hover:text-white/40 transition-colors">docs</Link>

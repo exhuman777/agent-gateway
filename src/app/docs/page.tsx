@@ -1,261 +1,263 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Nav } from "@/components/Nav";
+
+const BASE = "https://agent-gateway-zeta.vercel.app";
 
 export default function DocsPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-[#e0e0e0]">
-      {/* Nav */}
-      <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
-        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</Link>
-            <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">docs</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="/explore" className="text-xs text-white/40 hover:text-white transition-colors font-mono">explore</Link>
-            <Link href="/about" className="text-xs text-white/40 hover:text-white transition-colors font-mono">about</Link>
-            <Link href="/methodology" className="text-xs text-white/40 hover:text-white transition-colors font-mono">methodology</Link>
-          </div>
-        </div>
-      </nav>
+      <Nav active="docs" />
 
-      <main className="pt-14 max-w-4xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-2">API Documentation</h1>
-        <p className="text-muted-foreground mb-8">Agent-first API for the agent economy</p>
+      <main className="pt-14 max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <h1 className="text-3xl md:text-4xl font-mono font-bold text-white mb-4">API Documentation</h1>
+        <p className="text-sm text-white/40 font-mono mb-12 max-w-xl">
+          One Smart API for AI agents and developers. No auth needed for reads.
+        </p>
 
         {/* Quick Start */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4">Quick Start</h2>
-          <Card className="bg-card/50">
-            <CardContent className="pt-6">
-              <pre className="text-sm font-mono text-muted-foreground overflow-x-auto">
-{`# Find best provider for a capability
-curl -X POST https://apipool.dev/api/v1/route \\
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-6">Quick Start</h2>
+          <div className="border border-white/10 rounded-lg overflow-hidden bg-white/[0.02]">
+            <div className="px-4 py-2 border-b border-white/5">
+              <span className="text-[10px] font-mono text-white/30">try these right now — no auth, no keys</span>
+            </div>
+            <pre className="p-4 md:p-6 text-xs font-mono text-white/40 overflow-x-auto leading-relaxed">
+{`# Route to best provider (natural language)
+curl -X POST ${BASE}/api/v1/route \\
   -H "Content-Type: application/json" \\
-  -d '{"capability": "research"}'
+  -d '{"query": "trending prediction markets"}'
 
-# List all APIs
-curl https://apipool.dev/api/v1/registry
+# Get prediction market data
+curl ${BASE}/api/v1/data/markets/trending?limit=5
 
-# Get single API
-curl https://apipool.dev/api/v1/registry/rufus-research`}
-              </pre>
-            </CardContent>
-          </Card>
+# Web search (10 free/day)
+curl -X POST ${BASE}/api/v1/search \\
+  -H "Content-Type: application/json" \\
+  -d '{"q": "latest AI news"}'
+
+# Browse all registered APIs
+curl ${BASE}/api/v1/registry`}
+            </pre>
+          </div>
         </section>
 
         {/* Endpoints */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4">Endpoints</h2>
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-6">Endpoints</h2>
           <div className="space-y-4">
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-mono">
-                  <Badge className="mr-2">POST</Badge>
-                  /api/v1/route
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Find the best API provider for a capability. Returns provider with highest quality score matching your preferences.
-                </p>
-                <h4 className="font-semibold text-sm mb-2">Request Body</h4>
-                <pre className="text-xs font-mono bg-muted/30 p-3 rounded overflow-x-auto">
-{`{
-  "capability": "research",      // required
-  "preferences": {               // optional
+
+            {/* Route */}
+            <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono text-white/60 bg-white/10 px-2 py-0.5 rounded">POST</span>
+                <span className="text-sm font-mono text-white">/api/v1/route</span>
+              </div>
+              <p className="text-xs font-mono text-white/40 mb-4">
+                Find the best API provider for a capability. Supports exact match or natural language queries. Returns provider with highest quality score + fallbacks.
+              </p>
+              <pre className="text-[10px] md:text-xs font-mono text-white/30 bg-black/20 rounded p-3 overflow-x-auto">
+{`// Request body:
+{
+  "capability": "prediction-markets",  // exact match
+  // OR
+  "query": "crypto odds",              // natural language
+  "preferences": {                     // optional
     "max_latency_ms": 2000,
     "max_price": 0.01,
     "min_quality_score": 4.0
   },
-  "fallback_count": 2            // optional
+  "fallback_count": 2                  // optional
 }`}
-                </pre>
-              </CardContent>
-            </Card>
+              </pre>
+            </div>
 
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-mono">
-                  <Badge variant="secondary" className="mr-2">GET</Badge>
-                  /api/v1/registry
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  List and search all registered APIs.
-                </p>
-                <h4 className="font-semibold text-sm mb-2">Query Parameters</h4>
-                <pre className="text-xs font-mono bg-muted/30 p-3 rounded overflow-x-auto">
+            {/* Search */}
+            <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono text-white/60 bg-white/10 px-2 py-0.5 rounded">POST</span>
+                <span className="text-sm font-mono text-white">/api/v1/search</span>
+              </div>
+              <p className="text-xs font-mono text-white/40 mb-4">
+                Brave web search. 10 free calls/day per IP. After that, $0.005 USDC per request via x402 micropayments.
+              </p>
+              <pre className="text-[10px] md:text-xs font-mono text-white/30 bg-black/20 rounded p-3 overflow-x-auto">
+{`// Request:
+{ "q": "latest AI news", "count": 5 }
+
+// Response includes:
+// - Organic results (title, url, description)
+// - Free tier remaining count
+// - x402 payment info when exhausted`}
+              </pre>
+            </div>
+
+            {/* Intelligence */}
+            <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">GET</span>
+                <span className="text-sm font-mono text-white">/api/v1/intelligence</span>
+                <span className="text-[10px] font-mono text-white/60 bg-white/10 px-2 py-0.5 rounded ml-2">POST</span>
+              </div>
+              <p className="text-xs font-mono text-white/40 mb-4">
+                GET: Intelligence system status — all provider predictions, anomalies, data points.
+                POST: Test contextual understanding — send a natural language query, get back matched capabilities.
+              </p>
+              <pre className="text-[10px] md:text-xs font-mono text-white/30 bg-black/20 rounded p-3 overflow-x-auto">
+{`// POST request:
+{ "query": "crypto prediction odds" }
+
+// Response: matched capability + confidence score`}
+              </pre>
+            </div>
+
+            {/* Registry */}
+            <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">GET</span>
+                <span className="text-sm font-mono text-white">/api/v1/registry</span>
+              </div>
+              <p className="text-xs font-mono text-white/40 mb-4">
+                List and search all registered APIs. Filter by capability, category, quality.
+              </p>
+              <pre className="text-[10px] md:text-xs font-mono text-white/30 bg-black/20 rounded p-3 overflow-x-auto">
 {`?capability=research     # filter by capability
 ?category=market-data    # filter by category
 ?min_quality=4.0         # minimum quality score
-?max_price=0.01          # maximum price
-?max_latency=2000        # maximum latency (ms)
-?sort=quality            # sort: quality|price|latency|popularity
-?limit=10                # limit results`}
-                </pre>
-              </CardContent>
-            </Card>
+?sort=quality            # sort: quality|price|latency`}
+              </pre>
+            </div>
 
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-mono">
-                  <Badge variant="secondary" className="mr-2">GET</Badge>
-                  /api/v1/registry/:id
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Get detailed information about a specific API by ID.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-mono">
-                  <Badge className="mr-2">POST</Badge>
-                  /api/v1/registry
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Register a new API in the marketplace.
-                </p>
-                <pre className="text-xs font-mono bg-muted/30 p-3 rounded overflow-x-auto">
+            {/* Register */}
+            <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono text-white/60 bg-white/10 px-2 py-0.5 rounded">POST</span>
+                <span className="text-sm font-mono text-white">/api/registry/register</span>
+              </div>
+              <p className="text-xs font-mono text-white/40 mb-4">
+                Register a new API in the marketplace. Your API gets health-checked and scored automatically.
+              </p>
+              <pre className="text-[10px] md:text-xs font-mono text-white/30 bg-black/20 rounded p-3 overflow-x-auto">
 {`{
-  "name": "My Research API",
-  "description": "Deep research on any topic",
-  "endpoint": "https://api.example.com/research",
+  "name": "My Search API",
+  "description": "Search the web",
+  "endpoint": "https://api.example.com/search",
   "category": "research",
-  "capabilities": ["research", "analysis"],
+  "capabilities": ["web-search", "research"],
   "pricing": {
     "model": "x402",
-    "price": 0.001,
+    "price": 0.005,
     "currency": "USDC"
   },
-  "a2aCard": "https://api.example.com/.well-known/agent-card.json",
   "providerWallet": "0x..."
 }`}
-                </pre>
-              </CardContent>
-            </Card>
+              </pre>
+            </div>
 
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base font-mono">
-                  <Badge variant="secondary" className="mr-2">GET</Badge>
-                  /api/v1/capabilities
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  List all available capabilities with provider counts.
-                </p>
-              </CardContent>
-            </Card>
+            {/* Data endpoints */}
+            <div className="border border-white/10 rounded-lg p-5 bg-white/[0.02]">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">GET</span>
+                <span className="text-sm font-mono text-white">/api/v1/data/markets/*</span>
+              </div>
+              <p className="text-xs font-mono text-white/40 mb-4">
+                Polymarket prediction market data. 138 markets, 7 categories, price history. No auth needed.
+              </p>
+              <div className="space-y-2 text-[10px] md:text-xs font-mono text-white/30">
+                <div><span className="text-white/50">/trending</span> — top markets by volume (?limit=, ?category=)</div>
+                <div><span className="text-white/50">/search?q=</span> — full-text search</div>
+                <div><span className="text-white/50">/{`{slug}`}</span> — market detail + price history</div>
+                <div><span className="text-white/50">/stats</span> — volume, categories, sync status</div>
+              </div>
+            </div>
+
+            {/* Other endpoints */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="border border-white/10 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">GET</span>
+                  <span className="text-xs font-mono text-white">/api/v1/capabilities</span>
+                </div>
+                <p className="text-[10px] font-mono text-white/30">All available capabilities with provider counts</p>
+              </div>
+              <div className="border border-white/10 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded">GET</span>
+                  <span className="text-xs font-mono text-white">/api/v1/health-check</span>
+                </div>
+                <p className="text-[10px] font-mono text-white/30">Provider health status and quality scores</p>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Response Format */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4">Response Format</h2>
-          <p className="text-sm text-muted-foreground mb-4">
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-6">Response Format</h2>
+          <p className="text-xs font-mono text-white/40 mb-4">
             All responses are JSON-LD compatible with consistent structure:
           </p>
-          <Card className="bg-card/50">
-            <CardContent className="pt-6">
-              <pre className="text-xs font-mono text-muted-foreground overflow-x-auto">
-{`{
-  "@context": "https://apipool.dev/schema/v1",
-  "@type": "APIResponse",
-  "success": true,
-  "data": { ... },
-  "meta": {
-    "timestamp": "2026-02-05T10:00:00Z"
-  }
-}
-
-// Error format
+          <div className="border border-white/10 rounded-lg overflow-hidden bg-white/[0.02]">
+            <pre className="p-4 md:p-6 text-xs font-mono text-white/40 overflow-x-auto">
+{`// Success:
 {
   "@context": "https://apipool.dev/schema/v1",
-  "@type": "APIError",
+  "success": true,
+  "data": { ... },
+  "meta": { "timestamp": "2026-02-06T..." }
+}
+
+// Error:
+{
   "success": false,
   "error": {
     "code": "NOT_FOUND",
     "message": "API not found"
   }
 }`}
-              </pre>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Categories */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4">Categories</h2>
-          <div className="flex flex-wrap gap-2">
-            {["research", "market-data", "image-gen", "code", "translation", "summarization", "embeddings", "web-scraping", "audio", "video", "other"].map(cat => (
-              <Badge key={cat} variant="outline">{cat}</Badge>
-            ))}
+            </pre>
           </div>
         </section>
 
         {/* Pricing Models */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold mb-4">Pricing Models</h2>
+        <section className="mb-16">
+          <h2 className="text-xl font-mono font-bold text-white mb-6">Pricing Models</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">x402 (Recommended)</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Pay-per-request via HTTP 402. Instant L2 micropayments. No accounts needed.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">per_request</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Traditional per-request billing. Requires account setup.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">subscription</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Monthly fee for unlimited access. Best for high-volume consumers.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">free</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Free tier with daily limits. Good for testing and discovery.
-                </p>
-              </CardContent>
-            </Card>
+            {[
+              {
+                name: "x402 (Recommended)",
+                desc: "Pay-per-request via HTTP 402. USDC on Base. No accounts needed. Free tier included.",
+              },
+              {
+                name: "free",
+                desc: "No cost. Daily limits may apply. Good for testing and community APIs.",
+              },
+              {
+                name: "per_request",
+                desc: "Traditional per-request billing. Requires API key or account setup.",
+              },
+              {
+                name: "subscription",
+                desc: "Monthly fee for unlimited access. Best for high-volume consumers.",
+              },
+            ].map((model) => (
+              <div key={model.name} className="border border-white/10 rounded-lg p-4 bg-white/[0.02]">
+                <div className="font-mono text-sm text-white mb-2">{model.name}</div>
+                <p className="text-[10px] md:text-xs font-mono text-white/30">{model.desc}</p>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-border/40 pt-6 mt-12">
-          <p className="text-sm text-muted-foreground">
-            Full methodology and best practices: <Link href="/METHODOLOGY.md" className="text-primary hover:underline">METHODOLOGY.md</Link>
-          </p>
+        <footer className="border-t border-white/5 pt-8">
+          <div className="flex flex-wrap gap-6 font-mono text-xs">
+            <Link href="/" className="text-white/30 hover:text-white/60 transition-colors">Home</Link>
+            <Link href="/about" className="text-white/30 hover:text-white/60 transition-colors">About</Link>
+            <Link href="/methodology" className="text-white/30 hover:text-white/60 transition-colors">Methodology</Link>
+            <a href="https://github.com/exhuman777/agent-gateway" className="text-white/30 hover:text-white/60 transition-colors">
+              GitHub
+            </a>
+          </div>
         </footer>
       </main>
     </div>

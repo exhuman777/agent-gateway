@@ -1,22 +1,10 @@
 import Link from "next/link";
+import { Nav } from "@/components/Nav";
 
 export default function MethodologyPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-[#e0e0e0]">
-      {/* Nav */}
-      <nav className="border-b border-white/5 backdrop-blur-md fixed top-0 w-full z-50 bg-[#050505]/80">
-        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-mono font-bold text-white tracking-wider">APIPOOL</Link>
-            <span className="text-[10px] font-mono text-white/30 border border-white/10 px-1.5 py-0.5 rounded">methodology</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="/about" className="text-xs text-white/40 hover:text-white transition-colors font-mono">about</Link>
-            <Link href="/docs" className="text-xs text-white/40 hover:text-white transition-colors font-mono">docs</Link>
-            <Link href="/explore" className="text-xs text-white/40 hover:text-white transition-colors font-mono">explore</Link>
-          </div>
-        </div>
-      </nav>
+      <Nav active="methodology" />
 
       <main className="pt-14 max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-mono font-bold text-white mb-4">Methodology</h1>
@@ -42,9 +30,38 @@ export default function MethodologyPage() {
             </p>
           </div>
 
-          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-8">
+          <div className="border border-white/10 rounded-lg p-4 md:p-6 bg-white/[0.02] mb-8">
             <div className="text-xs font-mono text-white/30 mb-4">ROUTING FLOW</div>
-            <pre className="text-xs font-mono text-white/40 leading-relaxed">
+
+            {/* Mobile: stacked steps */}
+            <div className="md:hidden space-y-3 text-xs font-mono text-white/40">
+              <div className="border border-white/10 rounded p-3">
+                <div className="text-white/60 mb-1">1. Agent Request</div>
+                <div>POST /api/v1/route</div>
+                <div>{`{ capability: "X" }`}</div>
+              </div>
+              <div className="text-center text-white/20">↓</div>
+              <div className="border border-white/10 rounded p-3">
+                <div className="text-white/60 mb-1">2. APIPOOL Scores</div>
+                <div>Find providers with capability &quot;X&quot;</div>
+                <div>Q = 0.4U + 0.3L + 0.3S</div>
+                <div>Apply filters (latency, price)</div>
+              </div>
+              <div className="text-center text-white/20">↓</div>
+              <div className="border border-white/10 rounded p-3">
+                <div className="text-white/60 mb-1">3. Returns Best Provider</div>
+                <div>{`{ provider, fallbacks }`}</div>
+              </div>
+              <div className="text-center text-white/20">↓</div>
+              <div className="border border-white/10 rounded p-3">
+                <div className="text-white/60 mb-1">4. Direct Call</div>
+                <div>Agent calls provider directly</div>
+                <div className="text-white/20">(APIPOOL is a router, not a proxy)</div>
+              </div>
+            </div>
+
+            {/* Desktop: original diagram */}
+            <pre className="hidden md:block text-xs font-mono text-white/40 leading-relaxed overflow-x-auto">
 {`Agent Request                  APIPOOL                         Provider
      |                            |                              |
      |  POST /api/v1/route        |                              |
@@ -354,8 +371,36 @@ This provider routes first for "market-data" capability.`}
             </p>
           </div>
 
-          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.02] mb-8">
-            <pre className="text-xs font-mono text-white/40 leading-relaxed overflow-x-auto">
+          <div className="border border-white/10 rounded-lg p-4 md:p-6 bg-white/[0.02] mb-8">
+
+            {/* Mobile: clean stacked view */}
+            <div className="md:hidden space-y-4 text-xs font-mono text-white/40">
+              <div className="border border-white/10 rounded p-3">
+                <div className="text-white/60 mb-2">DAILY SYNC (Vercel Cron)</div>
+                <div className="space-y-1 text-[10px]">
+                  <div>12:00 UTC → Polymarket Gamma API</div>
+                  <div>→ Fetch 90 markets (50 trending, 20 new, 20 closed)</div>
+                  <div>→ Categorize into 7 categories</div>
+                  <div>→ Upsert to Supabase PostgreSQL</div>
+                </div>
+              </div>
+              <div className="text-center text-white/20">↓</div>
+              <div className="border border-white/10 rounded p-3">
+                <div className="text-white/60 mb-2">QUERY LAYER (Vercel Edge)</div>
+                <div className="space-y-1 text-[10px]">
+                  <div>/markets/trending → ORDER BY volume</div>
+                  <div>/markets/search?q= → WHERE ILIKE</div>
+                  <div>/markets/{`{slug}`} → JOIN snapshots</div>
+                  <div>/markets/stats → COUNT, SUM</div>
+                </div>
+                <div className="mt-2 pt-2 border-t border-white/5 text-[10px] text-white/20">
+                  &lt;200ms · 99.9%+ uptime · no LLM
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop: original diagram */}
+            <pre className="hidden md:block text-xs font-mono text-white/40 leading-relaxed overflow-x-auto">
 {`┌─────────────────────────────────────────────────────────────┐
 │                    DAILY SYNC (Vercel Cron)                  │
 │                                                             │
