@@ -12,15 +12,39 @@ https://agent-gateway-zeta.vercel.app
 
 ### 1. Find the Best API for a Task
 
-When you need an API but don't know which provider to use, query by capability:
+When you need an API, query by capability OR natural language:
 
 ```bash
+# Exact capability match
 curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/route \
   -H "Content-Type: application/json" \
   -d '{"capability": "prediction-markets"}'
+
+# Or natural language (no need to know capability names)
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/route \
+  -H "Content-Type: application/json" \
+  -d '{"query": "I need crypto prediction market prices"}'
 ```
 
-The response includes the best provider's endpoint, quality score, and fallbacks.
+The response includes the best provider's endpoint, quality score, intelligence multipliers, and fallbacks.
+
+### 1b. Test Contextual Understanding
+
+Parse a natural language query into capabilities without routing:
+
+```bash
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/intelligence \
+  -H "Content-Type: application/json" \
+  -d '{"query": "trending crypto odds"}'
+```
+
+### 1c. Check Intelligence Status
+
+See all provider predictions, anomalies, and data points:
+
+```bash
+curl https://agent-gateway-zeta.vercel.app/api/v1/intelligence
+```
 
 ### 2. Get Prediction Market Data
 

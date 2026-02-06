@@ -25,6 +25,10 @@ https://agent-gateway-zeta.vercel.app
 - GET /api/v1/data/markets/stats — Volume, categories, sync timing
 - GET /api/v1/data/markets?category=crypto&active=true — Filtered market list
 
+### Web Search (x402 Paid)
+- POST /api/v1/search — Brave web search. 10 free/day per IP, then $0.005 USDC via x402
+- GET /api/v1/search — Schema and pricing info
+
 ### Registration
 - POST /api/v1/registry — Register a new API provider
 
@@ -41,6 +45,11 @@ curl https://agent-gateway-zeta.vercel.app/api/v1/data/markets/trending?limit=5
 
 # Search for ethereum markets
 curl https://agent-gateway-zeta.vercel.app/api/v1/data/markets/search?q=ethereum
+
+# Web search (first 10/day free, then x402)
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "bitcoin price today"}'
 ```
 
 ## Response Format

@@ -270,6 +270,7 @@ export default function Home() {
                 <tbody>
                   {[
                     { method: "POST", endpoint: "/api/v1/route", desc: "Intelligent routing — find best provider for any capability", highlight: true },
+                    { method: "POST", endpoint: "/api/v1/search", desc: "Brave web search — 10 free/day, then $0.005 USDC via x402", highlight: true },
                     { method: "GET", endpoint: "/api/v1/registry", desc: "Browse all registered APIs" },
                     { method: "GET", endpoint: "/api/v1/capabilities", desc: "List all available capabilities" },
                     { method: "POST", endpoint: "/api/registry/register", desc: "Register your API" },
@@ -435,6 +436,7 @@ export default function Home() {
                     "No auth required for read endpoints",
                     "Return JSON, never HTML",
                     "Handle errors with {success: false, error: {...}}",
+                    "Use x402 for paid endpoints — free tier + micropayments",
                   ].map((item, i) => (
                     <div key={i} className="flex gap-2 text-white/40">
                       <span className="text-white/20">+</span>
@@ -451,6 +453,59 @@ export default function Home() {
                     <div>- LLM dependency for simple data lookups</div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* x402 Payment Best Practice */}
+            <div className="mt-6 border border-white/10 rounded-lg p-6">
+              <h3 className="font-mono text-sm text-white mb-4">x402 Payments — The Standard for Paid APIs</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <p className="text-xs font-mono text-white/40 leading-relaxed mb-4">
+                    If your API has a cost, use the x402 protocol. Agents pay per-call with USDC on Base
+                    — no API keys, no accounts, no subscriptions. The HTTP 402 status code was designed for this.
+                  </p>
+                  <div className="space-y-2 text-xs font-mono">
+                    {[
+                      "Offer a free tier (e.g., 10 calls/day per IP)",
+                      "Return HTTP 402 with payment requirements when free tier exhausted",
+                      "Accept payment via X-PAYMENT header",
+                      "Use USDC on Base for lowest fees",
+                      "Include pricing in your agent-card.json",
+                    ].map((item, i) => (
+                      <div key={i} className="flex gap-2 text-white/40">
+                        <span className="text-white/20">+</span>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <pre className="text-xs font-mono text-white/40 bg-black/30 rounded p-4 overflow-x-auto">
+{`// When free tier is exhausted:
+// Return HTTP 402 with payment info
+
+{
+  "error": {
+    "code": "PAYMENT_REQUIRED",
+    "x402": {
+      "wallet": "0x...",
+      "network": "base-sepolia",
+      "price": "0.005",
+      "asset": "USDC"
+    }
+  }
+}
+
+// Agent pays via @x402/fetch
+// and retries with X-PAYMENT header`}
+                  </pre>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 flex gap-4 text-[10px] font-mono text-white/20">
+                <a href="https://www.x402.org" className="hover:text-white/40 transition-colors">x402.org</a>
+                <a href="https://docs.cdp.coinbase.com/x402/welcome" className="hover:text-white/40 transition-colors">docs</a>
+                <span>npm: @x402/fetch (client) · x402-next (server)</span>
               </div>
             </div>
           </div>

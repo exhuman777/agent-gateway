@@ -74,6 +74,32 @@
       "method": "GET"
     },
     {
+      "id": "search",
+      "name": "Web Search (x402)",
+      "description": "Search the web using Brave Search API. First 10 calls/day free per IP, then $0.005 USDC per call via x402 micropayments on Base.",
+      "endpoint": "/api/v1/search",
+      "method": "POST",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "Search query string" },
+          "count": { "type": "number", "description": "Number of results (1-20, default 10)" }
+        },
+        "required": ["query"]
+      },
+      "payment": {
+        "protocol": "x402",
+        "price": "$0.005",
+        "currency": "USDC",
+        "network": "base-sepolia",
+        "free_tier": {
+          "daily_limit": 10,
+          "per": "IP address"
+        },
+        "wallet": "0x3058ff5B62E67a27460904783aFd670fF70c6A4A"
+      }
+    },
+    {
       "id": "register",
       "name": "Register API",
       "description": "Register a new API in the marketplace (requires review)",
@@ -108,8 +134,8 @@
     }
   ],
   "authentication": {
-    "schemes": ["none"],
-    "description": "Public API - no authentication required for read operations"
+    "schemes": ["none", "x402"],
+    "description": "Public API - no auth for reads. Paid endpoints use x402 micropayments (10 free calls/day, then USDC on Base)."
   },
   "rate_limits": {
     "read": { "requests_per_minute": 100 },
