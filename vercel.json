@@ -14,6 +14,10 @@
     {
       "path": "/api/v1/health-check",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/v1/data/sync",
+      "schedule": "0 12 * * *"
     }
   ]
 }
