@@ -1,0 +1,184 @@
+{
+  "name": "aipool",
+  "version": "1.0.0",
+  "description": "API marketplace for AI agents. Query by capability, get the best provider.",
+  "base_url": "https://agent-gateway-zeta.vercel.app",
+  "skills": [
+    {
+      "name": "route_to_provider",
+      "description": "Find the best API provider for a given capability. Returns endpoint, quality score, and fallbacks.",
+      "method": "POST",
+      "path": "/api/v1/route",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "parameters": {
+        "capability": {
+          "type": "string",
+          "required": true,
+          "description": "The capability needed (e.g., 'prediction-markets', 'research', 'market-data')"
+        },
+        "preferences": {
+          "type": "object",
+          "required": false,
+          "description": "Optional filters: max_latency_ms, max_price, min_quality_score"
+        }
+      },
+      "example": {
+        "capability": "prediction-markets",
+        "preferences": {
+          "max_latency_ms": 2000
+        }
+      }
+    },
+    {
+      "name": "get_trending_markets",
+      "description": "Get top prediction markets by trading volume. No auth needed.",
+      "method": "GET",
+      "path": "/api/v1/data/markets/trending",
+      "parameters": {
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 10,
+          "description": "Number of markets to return (max 50)"
+        }
+      }
+    },
+    {
+      "name": "search_markets",
+      "description": "Search prediction markets by keyword. Returns matching markets with prices and volume.",
+      "method": "GET",
+      "path": "/api/v1/data/markets/search",
+      "parameters": {
+        "q": {
+          "type": "string",
+          "required": true,
+          "description": "Search query (e.g., 'bitcoin', 'election', 'ethereum')"
+        }
+      }
+    },
+    {
+      "name": "get_market_detail",
+      "description": "Get full details for a specific prediction market including price history.",
+      "method": "GET",
+      "path": "/api/v1/data/markets/{slug}",
+      "parameters": {
+        "slug": {
+          "type": "string",
+          "required": true,
+          "description": "Market slug or ID"
+        }
+      }
+    },
+    {
+      "name": "get_market_stats",
+      "description": "Get overview stats: total markets, active markets, total volume, categories.",
+      "method": "GET",
+      "path": "/api/v1/data/markets/stats"
+    },
+    {
+      "name": "list_markets",
+      "description": "List all tracked markets with optional filters.",
+      "method": "GET",
+      "path": "/api/v1/data/markets",
+      "parameters": {
+        "category": {
+          "type": "string",
+          "required": false,
+          "description": "Filter by category: crypto, politics, sports, economics, tech, culture, science"
+        },
+        "active": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filter by active status"
+        },
+        "limit": {
+          "type": "integer",
+          "required": false,
+          "default": 50,
+          "description": "Number of markets to return"
+        },
+        "sort": {
+          "type": "string",
+          "required": false,
+          "default": "volume",
+          "description": "Sort by: volume, liquidity, yes_price, last_updated"
+        }
+      }
+    },
+    {
+      "name": "list_capabilities",
+      "description": "List all capabilities available in the marketplace with provider counts.",
+      "method": "GET",
+      "path": "/api/v1/capabilities"
+    },
+    {
+      "name": "browse_registry",
+      "description": "Browse all registered API providers in the marketplace.",
+      "method": "GET",
+      "path": "/api/v1/registry",
+      "parameters": {
+        "q": {
+          "type": "string",
+          "required": false,
+          "description": "Search query"
+        },
+        "category": {
+          "type": "string",
+          "required": false,
+          "description": "Filter by category"
+        }
+      }
+    },
+    {
+      "name": "register_api",
+      "description": "Register a new API in the aipool marketplace.",
+      "method": "POST",
+      "path": "/api/v1/registry",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "parameters": {
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "API name"
+        },
+        "description": {
+          "type": "string",
+          "required": true,
+          "description": "What the API does"
+        },
+        "endpoint": {
+          "type": "string",
+          "required": true,
+          "description": "Base URL of the API"
+        },
+        "category": {
+          "type": "string",
+          "required": true,
+          "description": "API category"
+        },
+        "capabilities": {
+          "type": "array",
+          "required": true,
+          "description": "List of capability strings"
+        },
+        "pricing": {
+          "type": "object",
+          "required": true,
+          "description": "Pricing model: {model, price, currency}"
+        },
+        "providerWallet": {
+          "type": "string",
+          "required": false,
+          "description": "Ethereum wallet address for x402 payments"
+        }
+      }
+    }
+  ],
+  "agent_card": "https://agent-gateway-zeta.vercel.app/.well-known/agent-card.json",
+  "standards": ["A2A", "MCP", "x402", "ERC-8004", "JSON-LD"],
+  "author": "Rufus #22742"
+}

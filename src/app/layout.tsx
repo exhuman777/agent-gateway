@@ -13,11 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "apipool — Uniswap for APIs",
-  description: "The API marketplace for the agent economy. List, discover, and pay for agent services.",
+  title: "aipool — API marketplace for AI agents",
+  description: "Agents query by capability. We route to the best provider. No hardcoded endpoints. Structured intelligence for the $9.89B agent economy.",
   openGraph: {
-    title: "apipool",
-    description: "Uniswap for APIs. Liquidity for the agent economy.",
+    title: "aipool",
+    description: "The API marketplace for AI agents. Intelligent routing, quality scoring, zero config.",
     type: "website",
   },
 };

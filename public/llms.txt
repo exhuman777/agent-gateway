@@ -1,82 +1,86 @@
-# Agent Gateway - API Registry for the Agent Economy
-# This file helps AI agents and LLMs discover and use this service
+# aipool — API marketplace for AI agents
 
-## What is Agent Gateway?
-Agent Gateway is an API registry and router for AI agents. It helps agents:
-- Discover APIs by capability (research, market-data, image-gen, etc.)
-- Route to the best provider based on quality, latency, and price
-- Register new APIs to join the marketplace
+> Agents query by capability. We route to the best provider.
+
+## What is aipool?
+
+aipool is an API marketplace where AI agents discover and consume APIs through capability-based routing instead of hardcoded endpoints. An agent says "I need prediction market data" and gets routed to the best available provider based on real-time quality scoring (uptime 40%, latency 30%, success rate 30%).
 
 ## Base URL
 https://agent-gateway-zeta.vercel.app
 
-## Endpoints for Agents
+## Endpoints
 
-### 1. List All APIs
-GET /api/v1/registry
-Returns: JSON list of all active APIs with capabilities, pricing, and metrics
+### Intelligent Routing (Core)
+- POST /api/v1/route — Find best provider for any capability
+- GET /api/v1/registry — Browse all registered APIs
+- GET /api/v1/registry/{id} — Get single API details
+- GET /api/v1/capabilities — List all available capabilities
+- GET /api/v1/health-check — Provider health status
 
-### 2. Search APIs with Filters
-GET /api/v1/registry?category=research&minQuality=4.0&maxPrice=0.01
-Filters: category, minQuality, maxPrice, capabilities, sortBy
+### Prediction Market Data (No Auth, No LLM)
+- GET /api/v1/data/markets/trending?limit=10 — Top markets by volume
+- GET /api/v1/data/markets/search?q=bitcoin — Search markets by keyword
+- GET /api/v1/data/markets/{slug} — Market detail + price history
+- GET /api/v1/data/markets/stats — Volume, categories, sync timing
+- GET /api/v1/data/markets?category=crypto&active=true — Filtered market list
 
-### 3. Get Single API by ID
-GET /api/v1/registry/{id}
-Returns: Full details of a specific API
+### Registration
+- POST /api/v1/registry — Register a new API provider
 
-### 4. Smart Routing - Find Best Provider
-POST /api/v1/route
-Body: { "capability": "research", "preferences": { "max_latency_ms": 3000 } }
-Returns: The best API provider for your capability needs
+## Quick Examples
 
-### 5. List All Capabilities
-GET /api/v1/capabilities
-Returns: All available capabilities with provider counts
+```
+# Find best prediction market API
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/route \
+  -H "Content-Type: application/json" \
+  -d '{"capability": "prediction-markets"}'
 
-### 6. Register New API
-POST /api/registry/register
-Body: { "name": "...", "endpoint": "...", "category": "...", "pricing": {...} }
-Returns: Registration confirmation (status: pending review)
+# Get trending markets
+curl https://agent-gateway-zeta.vercel.app/api/v1/data/markets/trending?limit=5
+
+# Search for ethereum markets
+curl https://agent-gateway-zeta.vercel.app/api/v1/data/markets/search?q=ethereum
+```
 
 ## Response Format
-All responses use JSON-LD with @context: https://apipool.dev/schema/v1
-
-## Example Usage (for agents)
-
-To find a research API:
+All responses return JSON:
+```json
+{
+  "success": true,
+  "data": { ... },
+  "meta": { "source": "...", "timestamp": "..." }
+}
 ```
-curl https://agent-gateway-zeta.vercel.app/api/v1/route \
-  -H "Content-Type: application/json" \
-  -d '{"capability": "research", "preferences": {"min_quality_score": 4.0}}'
-```
+
+## Quality Score Formula
+Q = 0.4 * (uptime/20) + 0.3 * max(0, 5-latency_ms/1000) + 0.3 * (success_rate * 5)
+
+## Standards
+- A2A (Google Agent-to-Agent Protocol)
+- MCP (Anthropic Model Context Protocol)
+- x402 (Coinbase HTTP micropayments)
+- ERC-8004 (On-chain agent identity)
+- JSON-LD (Linked Data responses)
+
+## Available Capabilities
+research, analysis, summarization, prediction-markets, market-data, price-history,
+trending-markets, market-search, market-analysis, arbitrage, briefing, crypto, news
 
 ## Categories
-- research: Deep research and analysis
-- market-data: Financial and prediction market data
-- image-gen: Image generation
-- code: Code generation and analysis
-- translation: Language translation
-- summarization: Text summarization
-- embeddings: Vector embeddings
-- web-scraping: Web data extraction
-- audio: Audio processing
-- video: Video processing
-- other: Everything else
+crypto, politics, sports, economics, tech, culture, science, research, market-data,
+summarization, other
 
-## Pricing Models
-- free: No cost, may have rate limits
-- per_request: Pay per API call
-- subscription: Monthly flat fee
-- x402: HTTP 402 micropayments
+## Pages
+- / — Homepage
+- /about — About, use cases, standards
+- /methodology — Quality scoring formulas, architecture
+- /docs — Full API documentation
+- /explore — Browse APIs
+- /register — Register your API
 
-## A2A Protocol
-This registry supports Google's Agent-to-Agent protocol.
-Agent cards available at: /.well-known/agent-card.json
+## Agent Card
+/.well-known/agent-card.json
 
-## For API Providers
-Register your API to be discovered by AI agents worldwide.
-Quality scoring is automated based on uptime, latency, and success rate.
-Higher quality = more routing priority.
-
-## Contact
-Built by Rufus for the agent economy.
+## Built By
+Rufus #22742 — Autonomous AI agent (ERC-8004 on Ethereum), built by Exhuman

@@ -54,7 +54,8 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="#how" className="text-xs text-white/40 hover:text-white transition-colors font-mono">how</a>
             <a href="#api" className="text-xs text-white/40 hover:text-white transition-colors font-mono">api</a>
-            <a href="#featured" className="text-xs text-white/40 hover:text-white transition-colors font-mono">featured</a>
+            <Link href="/about" className="text-xs text-white/40 hover:text-white transition-colors font-mono">about</Link>
+            <Link href="/methodology" className="text-xs text-white/40 hover:text-white transition-colors font-mono">methodology</Link>
             <Link href="/explore">
               <span className="text-xs text-black bg-white hover:bg-white/80 px-3 py-1.5 rounded font-mono transition-colors">
                 explore
@@ -442,9 +443,11 @@ export default function Home() {
                 <span>Built by Rufus</span>
               </div>
               <div className="flex gap-6 font-mono text-xs text-white/20">
+                <Link href="/about" className="hover:text-white/40 transition-colors">about</Link>
+                <Link href="/methodology" className="hover:text-white/40 transition-colors">methodology</Link>
+                <Link href="/docs" className="hover:text-white/40 transition-colors">docs</Link>
                 <a href="https://github.com/exhuman777/agent-gateway" className="hover:text-white/40 transition-colors">github</a>
                 <a href="/.well-known/agent-card.json" className="hover:text-white/40 transition-colors">agent-card</a>
-                <a href="/llms.txt" className="hover:text-white/40 transition-colors">llms.txt</a>
               </div>
             </div>
           </div>
