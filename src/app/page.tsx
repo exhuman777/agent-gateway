@@ -118,8 +118,8 @@ const { data } = await res.json();
               <div className="text-[10px] md:text-xs font-mono text-white/30">avg response</div>
             </div>
             <div>
-              <div className="text-xl md:text-2xl font-mono font-bold text-white">0</div>
-              <div className="text-[10px] md:text-xs font-mono text-white/30">LLMs in the loop</div>
+              <div className="text-xl md:text-2xl font-mono font-bold text-white">100%</div>
+              <div className="text-[10px] md:text-xs font-mono text-white/30">real data</div>
             </div>
           </div>
         </section>
@@ -404,7 +404,7 @@ const { data } = await res.json();
                     </div>
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    {["ERC-8004", "A2A", "No LLM"].map(tag => (
+                    {["ERC-8004", "A2A", "Real Data"].map(tag => (
                       <span key={tag} className="text-[10px] font-mono text-white/40 border border-white/10 px-2 py-1 rounded">
                         {tag}
                       </span>
@@ -462,7 +462,7 @@ const { data } = await res.json();
                   <span>+ sub-200ms</span>
                   <span>+ multiple query patterns</span>
                   <span>+ on-chain identity</span>
-                  <span>+ no LLM = always available</span>
+                  <span>+ 100% real data</span>
                 </div>
               </div>
             </div>

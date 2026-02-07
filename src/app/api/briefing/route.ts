@@ -1,68 +1,96 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateCompletion } from "@/lib/ollama";
+import { braveWebSearch } from "@/lib/brave";
+import { getTrendingMarkets, getStats } from "@/lib/polymarket";
+import type { BraveSearchResult } from "@/lib/types";
 
 export const runtime = "nodejs";
-export const maxDuration = 90;
+export const maxDuration = 30;
 
-const SYSTEM_PROMPT = `You are Rufus, an AI intelligence analyst (#22742 on ERC-8004).
-
-Generate concise, actionable intelligence briefings. Your briefings should:
-- Lead with the most important developments
-- Include quantitative data where possible
-- Highlight actionable opportunities
-- Flag emerging risks
-- Be structured for quick scanning
-
-Topics you cover:
-- Crypto markets and DeFi
-- Prediction markets (Polymarket, Kalshi)
-- AI and agent economy
-- Macro trends affecting digital assets
-
-Format: Use markdown with clear headers and bullet points.
-Length: Aim for 500-1000 words unless specified otherwise.`;
-
+// POST /api/briefing — Real-time intelligence briefing
+// Combines: Polymarket trending data + Brave Search headlines
+// Zero LLMs. 100% real data.
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+
   try {
     const body = await request.json();
-    const { topics, focus, length } = body;
+    const { topics, focus, count } = body;
 
     const topicsList = topics?.length
-      ? topics.join(", ")
-      : "crypto, prediction markets, agent economy";
+      ? topics
+      : ["crypto", "prediction markets", "AI"];
 
-    const prompt = `Generate an intelligence briefing covering: ${topicsList}
-${focus ? `\nSpecial focus: ${focus}` : ""}
-${length ? `\nTarget length: ${length}` : ""}
+    const searchCount = Math.min(count || 5, 10);
 
-Include today's date context: ${new Date().toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })}`;
+    // Fetch real data in parallel — no LLM, just data
+    const [trendingMarkets, stats, ...searchResults] = await Promise.all([
+      getTrendingMarkets(10),
+      getStats(),
+      ...topicsList.slice(0, 3).map((topic: string) =>
+        braveWebSearch(
+          focus ? `${topic} ${focus} latest news` : `${topic} latest news 2026`,
+          searchCount
+        ).catch(() => ({ results: [], query: topic, total_estimated: 0 }))
+      ),
+    ]);
 
-    const startTime = Date.now();
-    const response = await generateCompletion(prompt, {
-      system: SYSTEM_PROMPT,
-      temperature: 0.5,
-    });
     const duration = Date.now() - startTime;
+
+    // Build structured briefing from real data
+    const briefing = {
+      date: new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      headlines: searchResults.map((sr, i) => ({
+        topic: topicsList[i],
+        articles: sr.results.slice(0, searchCount).map((r: BraveSearchResult) => ({
+          title: r.title,
+          url: r.url,
+          snippet: r.description,
+          age: r.age,
+        })),
+        total_results: sr.total_estimated,
+      })),
+      markets: {
+        trending: trendingMarkets.slice(0, 5).map((m, i) => ({
+          rank: i + 1,
+          question: m.question,
+          yes_probability: `${(m.yes_price * 100).toFixed(1)}%`,
+          volume: m.volume,
+          category: m.category,
+        })),
+        summary: {
+          total_tracked: stats.total_markets,
+          active: stats.active_markets,
+          total_volume_usd: stats.total_volume,
+          categories: stats.categories.length,
+          last_sync: stats.last_sync,
+        },
+      },
+    };
 
     return NextResponse.json({
       success: true,
-      briefing: response,
+      briefing,
       metadata: {
-        agent: "Rufus #22742",
-        topics: topics || ["crypto", "prediction markets", "agent economy"],
-        generated_at: new Date().toISOString(),
+        agent: "APIPOOL",
+        erc8004_id: 22742,
+        topics: topicsList,
+        focus: focus || null,
+        sources: ["Brave Search API", "Polymarket (via Supabase)"],
+        llm_used: false,
         duration_ms: duration,
+        generated_at: new Date().toISOString(),
       },
     });
   } catch (error) {
     console.error("Briefing error:", error);
     return NextResponse.json(
       {
+        success: false,
         error: "Briefing generation failed",
         message: error instanceof Error ? error.message : "Unknown error",
       },
@@ -75,16 +103,63 @@ export async function GET() {
   return NextResponse.json({
     endpoint: "/api/briefing",
     method: "POST",
-    description: "Generate intelligence briefings on crypto, prediction markets, and agent economy",
+    description:
+      "Real-time intelligence briefing combining Polymarket data and Brave Search headlines. No LLM — 100% real data.",
     parameters: {
-      topics: { type: "string[]", required: false, description: "Topics to cover", default: ["crypto", "prediction markets", "agent economy"] },
-      focus: { type: "string", required: false, description: "Special area of focus" },
-      length: { type: "string", required: false, description: "Target length (e.g., 'short', '500 words')" },
+      topics: {
+        type: "string[]",
+        required: false,
+        description: "Topics to cover",
+        default: ["crypto", "prediction markets", "AI"],
+      },
+      focus: {
+        type: "string",
+        required: false,
+        description: "Narrow focus within topics (e.g., 'arbitrage opportunities')",
+      },
+      count: {
+        type: "number",
+        required: false,
+        description: "Number of headlines per topic (1-10)",
+        default: 5,
+      },
     },
-    example: {
-      topics: ["polymarket", "bitcoin"],
-      focus: "arbitrage opportunities",
-      length: "short",
+    example_request: {
+      topics: ["bitcoin", "polymarket"],
+      focus: "price movements",
+      count: 3,
     },
+    example_response: {
+      success: true,
+      briefing: {
+        date: "Friday, February 7, 2026",
+        headlines: [
+          {
+            topic: "bitcoin",
+            articles: [
+              {
+                title: "Bitcoin Surges Past $70K...",
+                url: "https://example.com",
+                snippet: "...",
+                age: "2 hours ago",
+              },
+            ],
+          },
+        ],
+        markets: {
+          trending: [
+            {
+              rank: 1,
+              question: "Will Bitcoin reach $100K by June 2026?",
+              yes_probability: "23.5%",
+              volume: 5000000,
+              category: "crypto",
+            },
+          ],
+        },
+      },
+    },
+    sources: ["Brave Search API", "Polymarket (cached in Supabase)"],
+    llm_required: false,
   });
 }

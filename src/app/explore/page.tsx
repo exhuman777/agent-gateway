@@ -136,7 +136,7 @@ function ExploreContent() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredApis.map((api) => (
-            <Link key={api.id} href={`/api/${api.id}`}>
+            <Link key={api.id} href={`/explore/${api.id}`}>
               <Card className="bg-card/50 border-border/40 hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardHeader>
                   <div className="flex items-center justify-between">
