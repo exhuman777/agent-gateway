@@ -33,7 +33,7 @@ curl ${BASE}/api/v1/data/markets/trending?limit=5
 # Web search (10 free/day)
 curl -X POST ${BASE}/api/v1/search \\
   -H "Content-Type: application/json" \\
-  -d '{"q": "latest AI news"}'
+  -d '{"query": "latest AI news"}'
 
 # Browse all registered APIs
 curl ${BASE}/api/v1/registry`}
@@ -82,7 +82,7 @@ curl ${BASE}/api/v1/registry`}
               </p>
               <pre className="text-[10px] md:text-xs font-mono text-white/30 bg-black/20 rounded p-3 overflow-x-auto">
 {`// Request:
-{ "q": "latest AI news", "count": 5 }
+{ "query": "latest AI news", "count": 5 }
 
 // Response includes:
 // - Organic results (title, url, description)

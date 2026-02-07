@@ -11,8 +11,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface HealthStatus {
   status: string;
   services: {
-    ollama: string;
     api: string;
+    supabase: string;
+    brave_search: string;
   };
   agent: {
     id: string;
@@ -96,15 +97,15 @@ export default function Dashboard() {
 
           <Card className="bg-card/50 border-border/40">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Ollama</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Supabase</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
                 <Skeleton className="h-8 w-24" />
               ) : (
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${health?.services.ollama === "up" ? "bg-green-500" : "bg-red-500"}`} />
-                  <span className="text-2xl font-bold capitalize">{health?.services.ollama || "unknown"}</span>
+                  <div className={`w-2 h-2 rounded-full ${health?.services.supabase === "up" ? "bg-green-500" : "bg-red-500"}`} />
+                  <span className="text-2xl font-bold capitalize">{health?.services.supabase || "unknown"}</span>
                 </div>
               )}
             </CardContent>

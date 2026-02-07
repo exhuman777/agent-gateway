@@ -71,12 +71,12 @@ export default function AboutPage() {
               {
                 title: "Brave Web Search",
                 desc: "Search the web from any app. 10 free calls/day, then $0.005/call via x402 micropayments. Real Brave Search results, structured JSON.",
-                example: "POST /api/v1/search { \"q\": \"latest AI news\" }",
+                example: "POST /api/v1/search { \"query\": \"latest AI news\" }",
                 tag: "LIVE",
               },
               {
                 title: "Prediction Markets",
-                desc: "138 markets from Polymarket with price history. Trending, search, and detailed stats. No auth, no LLM, sub-200ms.",
+                desc: "138 markets from Polymarket with price history. Trending, search, and detailed stats. No auth, 100% real data, sub-200ms.",
                 example: "GET /api/v1/data/markets/trending?limit=5",
                 tag: "LIVE",
               },

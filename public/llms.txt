@@ -29,6 +29,18 @@ https://agent-gateway-zeta.vercel.app
 - POST /api/v1/search — Brave web search. 10 free/day per IP, then $0.005 USDC via x402
 - GET /api/v1/search — Schema and pricing info
 
+### Intelligence Briefing (100% Real Data)
+- POST /api/briefing — Real-time briefing combining Polymarket trending data + Brave Search headlines
+- GET /api/briefing — Schema and example response
+
+### Market Analysis (100% Real Data)
+- POST /api/market-analysis — Prediction market analysis with price history, arbitrage signals, news context
+- GET /api/market-analysis — Schema and parameters
+
+### Research (100% Real Data)
+- POST /api/research — Web research via Brave Search with structured results and source grouping
+- GET /api/research — Schema and parameters
+
 ### Registration
 - POST /api/v1/registry — Register a new API provider
 
