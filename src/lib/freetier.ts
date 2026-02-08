@@ -73,7 +73,8 @@ export async function checkFreeTier(
 }
 
 /**
- * Increment the free tier counter for a caller
+ * Increment the free tier counter for a caller.
+ * Uses delete-then-insert because RLS blocks UPDATE on anon role.
  */
 export async function incrementFreeTier(
   ip: string,
@@ -82,39 +83,34 @@ export async function incrementFreeTier(
   const today = todayUTC();
 
   try {
-    // Upsert: insert or increment
-    const { error } = await supabase.rpc("increment_free_tier", {
-      p_caller_ip: ip,
-      p_endpoint: endpoint,
-      p_date: today,
-    });
+    // Read current count
+    const { data: existing } = await supabase
+      .from("free_tier_usage")
+      .select("call_count")
+      .eq("caller_ip", ip)
+      .eq("endpoint", endpoint)
+      .eq("date", today)
+      .single();
 
-    if (error) {
-      // Fallback: try direct upsert
-      const { data: existing } = await supabase
+    const newCount = (existing?.call_count || 0) + 1;
+
+    // Delete existing row (RLS allows DELETE)
+    if (existing) {
+      await supabase
         .from("free_tier_usage")
-        .select("call_count")
+        .delete()
         .eq("caller_ip", ip)
         .eq("endpoint", endpoint)
-        .eq("date", today)
-        .single();
-
-      if (existing) {
-        await supabase
-          .from("free_tier_usage")
-          .update({ call_count: existing.call_count + 1 })
-          .eq("caller_ip", ip)
-          .eq("endpoint", endpoint)
-          .eq("date", today);
-      } else {
-        await supabase.from("free_tier_usage").insert({
-          caller_ip: ip,
-          endpoint,
-          date: today,
-          call_count: 1,
-        });
-      }
+        .eq("date", today);
     }
+
+    // Insert with incremented count (RLS allows INSERT)
+    await supabase.from("free_tier_usage").insert({
+      caller_ip: ip,
+      endpoint,
+      date: today,
+      call_count: newCount,
+    });
   } catch {
     // Update in-memory fallback
     const key = `${ip}:${endpoint}:${today}`;
