@@ -28,7 +28,7 @@ function getConfig() {
  */
 export function create402Response(description: string): NextResponse {
   const config = getConfig();
-  const usdcAddress = USDC_ADDRESSES[config.network] || USDC_ADDRESSES["base-sepolia"];
+  const usdcAddress = USDC_ADDRESSES[config.network] || USDC_ADDRESSES["base"];
 
   const requirements: X402PaymentRequirements = {
     x402_version: "1",
@@ -171,7 +171,7 @@ export function getX402PricingInfo() {
     network: config.network,
     wallet: config.wallet,
     free_daily_limit: parseInt(process.env.X402_FREE_DAILY_LIMIT || "10"),
-    asset: USDC_ADDRESSES[config.network] || USDC_ADDRESSES["base-sepolia"],
+    asset: USDC_ADDRESSES[config.network] || USDC_ADDRESSES["base"],
     facilitator: FACILITATOR_URL,
     client_library: "@x402/fetch",
   };

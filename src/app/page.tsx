@@ -553,7 +553,7 @@ const { data } = await res.json();
     "code": "PAYMENT_REQUIRED",
     "x402": {
       "wallet": "0x...",
-      "network": "base-sepolia",
+      "network": "base",
       "price": "0.005",
       "asset": "USDC"
     }

@@ -91,7 +91,7 @@
         "protocol": "x402",
         "price": "$0.005",
         "currency": "USDC",
-        "network": "base-sepolia",
+        "network": "base",
         "free_tier": {
           "daily_limit": 10,
           "per": "IP address"
