@@ -1,47 +1,41 @@
 // Free tier tracking for APIPOOL paid endpoints
-// Uses Supabase to track daily call counts per IP per endpoint
-// Falls back to in-memory tracking if Supabase is unavailable
+// Counts successful free-tier requests in api_usage table (already logged by every request)
+// No separate counter table needed — single source of truth
 
 import { supabase } from "./supabase";
 import { FreeTierStatus } from "./types";
 
 const DAILY_LIMIT = parseInt(process.env.X402_FREE_DAILY_LIMIT || "10");
 
-// In-memory fallback (for when Supabase is slow/down)
-const memoryFallback = new Map<string, { count: number; date: string }>();
-
-function todayUTC(): string {
-  return new Date().toISOString().split("T")[0]; // "2026-02-06"
-}
-
 /**
- * Check if caller has free tier calls remaining
+ * Check if caller has free tier calls remaining.
+ * Counts today's successful free-tier rows in api_usage for this IP+endpoint.
  */
 export async function checkFreeTier(
   ip: string,
   endpoint: string
 ): Promise<FreeTierStatus> {
-  const today = todayUTC();
   const limit = DAILY_LIMIT;
 
   try {
-    const { data, error } = await supabase
-      .from("free_tier_usage")
-      .select("call_count")
+    // Count today's free-tier usage from api_usage (the log we already write)
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+
+    const { count, error } = await supabase
+      .from("api_usage")
+      .select("*", { count: "exact", head: true })
       .eq("caller_ip", ip)
       .eq("endpoint", endpoint)
-      .eq("date", today)
-      .single();
+      .eq("is_free_tier", true)
+      .eq("status", "success")
+      .gte("created_at", todayStart.toISOString());
 
-    if (error && error.code !== "PGRST116") {
-      // PGRST116 = no rows found (that's fine, means 0 usage)
-      throw error;
-    }
+    if (error) throw error;
 
-    const used = data?.call_count || 0;
+    const used = count || 0;
     const remaining = Math.max(0, limit - used);
 
-    // Calculate when free tier resets (next midnight UTC)
     const tomorrow = new Date();
     tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
     tomorrow.setUTCHours(0, 0, 0, 0);
@@ -53,72 +47,24 @@ export async function checkFreeTier(
       resets_at: tomorrow.toISOString(),
     };
   } catch {
-    // Fallback to in-memory
-    const key = `${ip}:${endpoint}:${today}`;
-    const mem = memoryFallback.get(key);
-    const used = mem?.date === today ? mem.count : 0;
-    const remaining = Math.max(0, limit - used);
-
-    const tomorrow = new Date();
-    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-    tomorrow.setUTCHours(0, 0, 0, 0);
-
+    // If Supabase is down, allow the request (fail open for availability)
     return {
-      allowed: remaining > 0,
-      remaining,
+      allowed: true,
+      remaining: limit,
       limit,
-      resets_at: tomorrow.toISOString(),
+      resets_at: new Date(Date.now() + 86400000).toISOString(),
     };
   }
 }
 
 /**
- * Increment the free tier counter for a caller.
- * Uses delete-then-insert because RLS blocks UPDATE on anon role.
+ * No-op — increment is handled by logUsage() in the search route.
+ * Kept for API compatibility.
  */
 export async function incrementFreeTier(
-  ip: string,
-  endpoint: string
+  _ip: string,
+  _endpoint: string
 ): Promise<void> {
-  const today = todayUTC();
-
-  try {
-    // Read current count
-    const { data: existing } = await supabase
-      .from("free_tier_usage")
-      .select("call_count")
-      .eq("caller_ip", ip)
-      .eq("endpoint", endpoint)
-      .eq("date", today)
-      .single();
-
-    const newCount = (existing?.call_count || 0) + 1;
-
-    // Delete existing row (RLS allows DELETE)
-    if (existing) {
-      await supabase
-        .from("free_tier_usage")
-        .delete()
-        .eq("caller_ip", ip)
-        .eq("endpoint", endpoint)
-        .eq("date", today);
-    }
-
-    // Insert with incremented count (RLS allows INSERT)
-    await supabase.from("free_tier_usage").insert({
-      caller_ip: ip,
-      endpoint,
-      date: today,
-      call_count: newCount,
-    });
-  } catch {
-    // Update in-memory fallback
-    const key = `${ip}:${endpoint}:${today}`;
-    const mem = memoryFallback.get(key);
-    if (mem?.date === today) {
-      mem.count++;
-    } else {
-      memoryFallback.set(key, { count: 1, date: today });
-    }
-  }
+  // Usage is already logged by logUsage() in the search handler.
+  // checkFreeTier counts those logs directly — no separate counter needed.
 }
