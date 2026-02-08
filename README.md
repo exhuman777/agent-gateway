@@ -134,6 +134,31 @@ Where base_quality = 0.4(uptime/20) + 0.3(5-latency/1000) + 0.3(success×5)
 | `GET` | `/api/v1/data/markets/stats` | Volume, categories, sync stats |
 | `GET` | `/api/v1/data/markets` | All markets (filterable by category, active, sort) |
 
+### x402 Web Search (Pay-per-Request)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/search` | **Brave Web Search** — 10 free/day, then $0.005 USDC via x402 |
+| `GET` | `/api/v1/search` | Schema, pricing info, x402 flow docs |
+
+```bash
+# Free tier (first 10/day per IP)
+curl -X POST https://agent-gateway-zeta.vercel.app/api/v1/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "bitcoin 2026", "count": 5}'
+
+# After free tier: server returns 402 with payment requirements
+# Use @x402/fetch to pay automatically:
+# npm install @x402/fetch
+```
+
+**x402 Payment Details:**
+- Network: **Base mainnet** (EIP155:8453)
+- Asset: USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`)
+- Price: $0.005 per request
+- Wallet: `0x3058ff5B62E67a27460904783aFd670fF70c6A4A`
+- Facilitator: `https://x402.org/facilitator`
+
 ---
 
 ## Architecture
@@ -200,7 +225,7 @@ No Mac Mini needed. No LLM needed. 138 markets tracked. $17M+ volume indexed.
 | Anomaly detection | Live |
 | JSON-LD responses | Live |
 | A2A agent card | Live |
-| x402 payment support | Ready |
+| x402 payments (Base mainnet USDC) | Live |
 | ERC-8004 on-chain identity | #22742 |
 | About page | [/about](https://agent-gateway-zeta.vercel.app/about) |
 | Full methodology | [/methodology](https://agent-gateway-zeta.vercel.app/methodology) |
@@ -216,7 +241,7 @@ No Mac Mini needed. No LLM needed. 138 markets tracked. $17M+ volume indexed.
 |----------|--------|---------------------|
 | **A2A** (Google) | Supported | Agent cards at `/.well-known/agent-card.json` for discovery |
 | **MCP** (Anthropic) | Compatible | All data endpoints work as MCP data sources |
-| **x402** (Coinbase) | Supported | Pay-per-request pricing for providers |
+| **x402** (Coinbase) | **Live** | Pay-per-request via USDC on Base mainnet ($0.005/search) |
 | **ERC-8004** | Active | On-chain identity #22742 on Ethereum |
 | **JSON-LD** | Native | All responses include `@context` for machine semantics |
 
@@ -249,6 +274,7 @@ npm install
 # Environment
 cp .env.example .env.local
 # Fill in: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, CRON_SECRET
+# For x402: X402_WALLET_ADDRESS, X402_NETWORK=base, X402_PRICE=0.005, BRAVE_API_KEY
 
 # Run
 npm run dev
@@ -270,6 +296,7 @@ src/
       capabilities/  — Capability listing
       intelligence/  — Intelligence status + NL parsing
       health-check/  — Provider health checks
+      search/        — x402 web search (Brave + micropayments)
       data/markets/  — Polymarket data endpoints
     about/           — About page
     methodology/     — Full methodology with formulas
@@ -280,6 +307,9 @@ src/
     intelligence.ts  — 4-pillar intelligence engine
     polymarket.ts    — Polymarket data sync + queries
     registry.ts      — Registry logic
+    x402.ts          — x402 payment protocol (402 responses, facilitator verification)
+    brave.ts         — Brave Search API integration
+    freetier.ts      — Free tier tracking (10/day per IP)
     db.ts            — Supabase operations
     types.ts         — TypeScript interfaces
 public/
