@@ -16,9 +16,9 @@ const FACILITATOR_URL = process.env.X402_FACILITATOR_URL || "https://x402.org/fa
 
 function getConfig() {
   return {
-    wallet: process.env.X402_WALLET_ADDRESS || "0x3058ff5B62E67a27460904783aFd670fF70c6A4A",
-    network: process.env.X402_NETWORK || "base",
-    price: process.env.X402_PRICE || "0.005",
+    wallet: (process.env.X402_WALLET_ADDRESS || "0x3058ff5B62E67a27460904783aFd670fF70c6A4A").trim(),
+    network: (process.env.X402_NETWORK || "base").trim(),
+    price: (process.env.X402_PRICE || "0.005").trim(),
   };
 }
 
