@@ -70,7 +70,7 @@ export function create402Response(description: string): NextResponse {
           network: `eip155:${config.network === "base" ? "8453" : "84532"}`,
           maxAmountRequired: config.price,
           resource: "/api/v1/search",
-          description,
+          description: description.replace(/[^\x20-\x7E]/g, "-"),
           payTo: config.wallet,
           asset: usdcAddress,
         },

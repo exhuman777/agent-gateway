@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
         });
 
         return create402Response(
-          `Brave Web Search: "${query.trim()}" — $0.005 USDC per query`
+          `Brave Web Search: "${query.trim()}" - $0.005 USDC per query`
         );
       }
     }
