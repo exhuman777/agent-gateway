@@ -8,6 +8,18 @@ const CONTEXT = "https://apipool.dev/schema/v1";
 
 // Cron secret for Vercel cron jobs
 const CRON_SECRET = process.env.CRON_SECRET || "health-check-2024";
+const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://agent-gateway-zeta.vercel.app";
+
+/** Resolve endpoint URL — handles relative paths like "/api/v1/search" */
+function resolveEndpoint(endpoint: string): string {
+  try {
+    new URL(endpoint);
+    return endpoint; // Already absolute
+  } catch {
+    // Relative path — prepend our app URL
+    return `${APP_BASE_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+  }
+}
 
 // POST /api/v1/health-check - Run health checks on all active APIs
 // This should be called by a cron job (Vercel Cron or external)
@@ -46,21 +58,40 @@ export async function POST(request: NextRequest) {
     let latency = 0;
 
     try {
-      // Simple health check - just check if endpoint responds
+      const url = resolveEndpoint(api.endpoint);
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      const response = await fetch(api.endpoint, {
-        method: "HEAD",
-        signal: controller.signal,
-      }).catch(() => fetch(api.endpoint, {
-        method: "GET",
-        signal: controller.signal,
-      }));
+      // Try HEAD first, then GET, then POST (for POST-only endpoints like search)
+      let response: Response | undefined;
+      try {
+        response = await fetch(url, {
+          method: "HEAD",
+          signal: controller.signal,
+        });
+        if (response.status === 405) throw new Error("HEAD not allowed");
+      } catch {
+        try {
+          response = await fetch(url, {
+            method: "GET",
+            signal: controller.signal,
+          });
+          if (response.status === 405) throw new Error("GET not allowed");
+        } catch {
+          // POST-only endpoint — send minimal probe
+          response = await fetch(url, {
+            method: "POST",
+            signal: controller.signal,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: "health-check", count: 1 }),
+          });
+        }
+      }
 
       clearTimeout(timeoutId);
       latency = Date.now() - startTime;
-      isUp = response.ok || response.status < 500;
+      // 402 (payment required) means the endpoint is UP, just needs payment
+      isUp = response.ok || response.status === 402 || response.status < 500;
     } catch {
       latency = Date.now() - startTime;
       isUp = false;
@@ -84,9 +115,9 @@ export async function POST(request: NextRequest) {
     // 40% uptime + 30% success rate + 30% latency score
     const latencyScore = Math.max(0, 5 - (avgLatency / 1000)); // 5 points if <1s
     const qualityScore = Math.round(
-      (uptimePercent / 20) * 0.4 + // 0-5 scale
+      ((uptimePercent / 20) * 0.4 + // 0-5 scale
       (successRate * 5) * 0.3 +
-      latencyScore * 0.3
+      latencyScore * 0.3)
     * 10) / 10;
 
     const newMetrics = {

@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       await incrementFreeTier(ip, "/api/v1/search");
     } else {
       // Free tier exhausted — check for x402 payment
-      paymentInfo = verifyPaymentHeader(request);
+      paymentInfo = await verifyPaymentHeader(request);
 
       if (!paymentInfo) {
         // No payment — return 402
