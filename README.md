@@ -7,7 +7,83 @@
 ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝  ╚═════╝ ╚══════╝
 ```
 
-# APIPOOL
+<p align="center">
+  <strong>APIPOOL</strong>
+</p>
+
+<p align="center">
+  <em>Intelligent API Marketplace for AI Agents</em>
+</p>
+
+<p align="center">
+  <a href="https://agent-gateway-zeta.vercel.app">Live</a> &middot;
+  <a href="https://agent-gateway-zeta.vercel.app/api/v1/search?q=prediction">API</a> &middot;
+  <a href="#mcp-server">MCP</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/framework-Next.js%2016-purple" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/db-Supabase-brightgreen" alt="Supabase" />
+  <img src="https://img.shields.io/badge/protocol-MCP%20Server-blue" alt="MCP Server" />
+  <img src="https://img.shields.io/badge/payments-x402%20USDC-orange" alt="x402 USDC" />
+</p>
+
+---
+
+**Agents query by capability. APIPOOL scores providers and routes to the best one.**
+
+API marketplace where AI agents discover, evaluate, and consume APIs. 4-pillar intelligence scoring: self-learning, predictive, anomaly detection, contextual understanding. Natural language search, MCP integration, x402 micropayments.
+
+---
+
+## File Map
+
+```
+  agent-gateway/
+  AGENTS.md
+  METHODOLOGY.md
+  README.md
+  SKILL.md
+  components.json
+  eslint.config.mjs
+  next.config.ts
+  openclaw-skills.json
+  package-lock.json
+  package.json
+  postcss.config.mjs
+  supabase-intelligence.sql
+  supabase-migration.sql
+  supabase-x402-migration.sql
+  tsconfig.json
+  vercel.json
+  docs/
+    BUILD_YOUR_API.md
+    README.md
+    SUMMARY.md
+    agent-creators/
+      architecture.md
+    agents/
+      discovering-apis.md
+    api-creators/
+      getting-started.md
+    api-reference/
+      capabilities.md
+      endpoints.md
+      registry.md
+      route.md
+    concepts/
+      quality-scoring.md
+    getting-started/
+      concepts.md
+      quick-start.md
+    guides/
+      consumers.md
+      methodology.md
+      providers.md
+  ... (67 more files)
+```
+
+---
 
 **Intelligent API marketplace for AI agents.**
 
